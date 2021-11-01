@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
 
+class AWeaponBase;
+class UArrowComponent;
 class UStaticMeshComponent;
 class UCameraComponent;
 class USpringArmComponent;
@@ -35,6 +37,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* Camera;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UArrowComponent* WeaponSetupPoint;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float MoveSpeed = 100.f;
 
@@ -44,15 +49,28 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float InterpolationSpeed = .1f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
+	float TurretRotationInterpolationSpeed = .4f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Weapon")
+	TSubclassOf<AWeaponBase> WeaponClass;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Turret|Weapon")
+	AWeaponBase* CurrentWeapon;
+
 private:
 	void OnMoveForward(const float Value);
 	void OnTurnRight(const float Value);
+	void OnFire();
+	void OnFireSpecial();
 	
 	void PerformMove(float DeltaTime);
 	void PerformRotate(float DeltaTime);
+	void PerformRotateTurret(float DeltaTime) const;
 
 protected:
 	virtual void BeginPlay() override;
+	void SetupCannon();
 
 public:
 	ATankPawn();

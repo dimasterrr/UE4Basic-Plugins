@@ -1,7 +1,12 @@
 ﻿#include "TankPawn.h"
 
+#include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
+#include "Components/ArrowComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "DestructiveForce/Controllers/TankPlayerController.h"
+#include "DestructiveForce/Weapons/WeaponBase.h"
 
 ATankPawn::ATankPawn()
 {
@@ -11,6 +16,9 @@ ATankPawn::ATankPawn()
 
 	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret Mesh"));
 	TurretMesh->SetupAttachment(BodyMesh);
+
+	WeaponSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Weapon Point"));
+	WeaponSetupPoint->AttachToComponent(TurretMesh, FAttachmentTransformRules::KeepRelativeTransform);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(BodyMesh);
@@ -26,6 +34,19 @@ ATankPawn::ATankPawn()
 void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();
+	SetupCannon();
+}
+
+void ATankPawn::SetupCannon()
+{
+	if (CurrentWeapon) CurrentWeapon->Destroy();
+
+	FActorSpawnParameters Parameters;
+	Parameters.Instigator = this;
+	Parameters.Owner = this;
+
+	CurrentWeapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, Parameters);
+	CurrentWeapon->AttachToComponent(WeaponSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
 void ATankPawn::Tick(float DeltaTime)
@@ -34,6 +55,7 @@ void ATankPawn::Tick(float DeltaTime)
 
 	PerformMove(DeltaTime);
 	PerformRotate(DeltaTime);
+	PerformRotateTurret(DeltaTime);
 }
 
 void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -42,6 +64,9 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATankPawn::OnMoveForward);
 	PlayerInputComponent->BindAxis("TurnRight", this, &ATankPawn::OnTurnRight);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATankPawn::OnFire);
+	PlayerInputComponent->BindAction("FireSpecial", IE_Pressed, this, &ATankPawn::OnFireSpecial);
 }
 
 void ATankPawn::OnMoveForward(const float Value)
@@ -52,6 +77,18 @@ void ATankPawn::OnMoveForward(const float Value)
 void ATankPawn::OnTurnRight(const float Value)
 {
 	ActiveRightAxis = Value;
+}
+
+void ATankPawn::OnFire()
+{
+	if (!CurrentWeapon) return;
+	CurrentWeapon->Fire();
+}
+
+void ATankPawn::OnFireSpecial()
+{
+	if (!CurrentWeapon) return;
+	CurrentWeapon->FireSpecial();
 }
 
 void ATankPawn::PerformMove(const float DeltaTime)
@@ -76,4 +113,22 @@ void ATankPawn::PerformRotate(const float DeltaTime)
 	const auto NewActorRotation = FRotator(0.f, YawRotation, 0.f);
 
 	SetActorRotation(NewActorRotation);
+}
+
+void ATankPawn::PerformRotateTurret(float DeltaTime) const
+{
+	const auto CurrentController = Cast<ATankPlayerController>(GetController());
+	if (!CurrentController) return;
+
+	const auto CurrentLocation = GetActorLocation();
+	const auto CurrentTurretRotation = TurretMesh->GetComponentRotation();
+	const auto CurrentMousePosition = CurrentController->GetCurrentMousePosition();
+
+	auto TargetTurretRotation = UKismetMathLibrary::FindLookAtRotation(CurrentLocation, CurrentMousePosition);
+	TargetTurretRotation.Pitch = CurrentTurretRotation.Pitch;
+	TargetTurretRotation.Roll = CurrentTurretRotation.Roll;
+
+	const auto NewTurretRotation = FMath::Lerp(CurrentTurretRotation, TargetTurretRotation,
+	                                           TurretRotationInterpolationSpeed);
+	TurretMesh->SetWorldRotation(NewTurretRotation);
 }
