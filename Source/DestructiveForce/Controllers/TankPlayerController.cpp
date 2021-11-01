@@ -18,21 +18,17 @@ void ATankPlayerController::PerformMousePosition()
 	const auto CurrentPawn = GetPawn();
 	if (!CurrentPawn) return;
 
-	FVector MouseDirection;
-	// Convert 2D screen cursor to 3D world position
-	DeprojectMousePositionToWorld(CurrentMousePosition, MouseDirection);
+	FVector MousePosition, MouseDirection;
+	DeprojectMousePositionToWorld(MousePosition, MouseDirection);
 
-	// Ignore Z position
 	const auto PawnPosition = CurrentPawn->GetActorLocation();
-	CurrentMousePosition.Z = PawnPosition.Z;
 
-	// Calculate and normalize cursor direction
-	auto Direction = CurrentMousePosition - PawnPosition;
+	auto Direction = MousePosition - PlayerCameraManager->GetCameraLocation();
 	Direction.Normalize();
 
-	CurrentMousePosition = PawnPosition + Direction * 1000;
+	CurrentMousePosition = MousePosition + Direction * 1000.f;
+	CurrentMousePosition.Z = PawnPosition.Z;
 
-	// Debug calculated direction
 	DrawDebugLine(GetWorld(), PawnPosition, CurrentMousePosition, FColor::Blue, false, 0, 0, 5);
 }
 
