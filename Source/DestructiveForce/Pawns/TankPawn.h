@@ -7,6 +7,7 @@
 #include "TankPawn.generated.h"
 
 class AWeaponBase;
+class UBoxComponent;
 class UArrowComponent;
 class UStaticMeshComponent;
 class UCameraComponent;
@@ -20,25 +21,25 @@ class DESTRUCTIVEFORCE_API ATankPawn : public APawn
 private:
 	float ActiveForwardAxis = 0.f;
 	float ActiveRightAxis = 0.f;
-	
+
 	float CurrentForwardRate = 0.f;
 	float CurrentRightRate = 0.f;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UBoxComponent* BoxCollision;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* BodyMesh;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* TurretMesh;
+	UArrowComponent* WeaponSetupPoint;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* Camera;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UArrowComponent* WeaponSetupPoint;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float MoveSpeed = 100.f;
@@ -53,7 +54,7 @@ protected:
 	float TurretRotationInterpolationSpeed = .4f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Weapon")
-	TSubclassOf<AWeaponBase> WeaponClass;
+	TSubclassOf<AWeaponBase> DefaultWeaponClass;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Turret|Weapon")
 	AWeaponBase* CurrentWeapon;
@@ -61,16 +62,22 @@ protected:
 private:
 	void OnMoveForward(const float Value);
 	void OnTurnRight(const float Value);
-	void OnFire();
-	void OnFireSpecial();
 	
+	void OnFireStart();
+	void OnFireStop();
+	
+	void OnFireSpecialStart();
+	void OnFireSpecialStop();
+	
+	void OnReload();
+
 	void PerformMove(float DeltaTime);
 	void PerformRotate(float DeltaTime);
 	void PerformRotateTurret(float DeltaTime) const;
 
 protected:
 	virtual void BeginPlay() override;
-	void SetupCannon();
+	void SetWeapon(TSubclassOf<AWeaponBase> WeaponClass);
 
 public:
 	ATankPawn();

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DestructiveForce/Controllers/TankPlayerController.h"
@@ -12,13 +13,13 @@ ATankPawn::ATankPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootComponent = BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body Mesh"));;
+	RootComponent = BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
 
-	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret Mesh"));
-	TurretMesh->SetupAttachment(BodyMesh);
+	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body Mesh"));
+	BodyMesh->SetupAttachment(BoxCollision);
 
 	WeaponSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Weapon Point"));
-	WeaponSetupPoint->AttachToComponent(TurretMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	WeaponSetupPoint->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(BodyMesh);
@@ -34,11 +35,13 @@ ATankPawn::ATankPawn()
 void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	SetupCannon();
+	// Setup Weapon
+	SetWeapon(DefaultWeaponClass);
 }
 
-void ATankPawn::SetupCannon()
+void ATankPawn::SetWeapon(const TSubclassOf<AWeaponBase> WeaponClass)
 {
+	if (!WeaponClass) return;
 	if (CurrentWeapon) CurrentWeapon->Destroy();
 
 	FActorSpawnParameters Parameters;
@@ -65,8 +68,13 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATankPawn::OnMoveForward);
 	PlayerInputComponent->BindAxis("TurnRight", this, &ATankPawn::OnTurnRight);
 
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATankPawn::OnFire);
-	PlayerInputComponent->BindAction("FireSpecial", IE_Pressed, this, &ATankPawn::OnFireSpecial);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATankPawn::OnFireStart);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATankPawn::OnFireStop);
+	
+	PlayerInputComponent->BindAction("FireSpecial", IE_Pressed, this, &ATankPawn::OnFireSpecialStart);
+	PlayerInputComponent->BindAction("FireSpecial", IE_Released, this, &ATankPawn::OnFireSpecialStop);
+	
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ATankPawn::OnReload);
 }
 
 void ATankPawn::OnMoveForward(const float Value)
@@ -79,16 +87,34 @@ void ATankPawn::OnTurnRight(const float Value)
 	ActiveRightAxis = Value;
 }
 
-void ATankPawn::OnFire()
+void ATankPawn::OnFireStart()
 {
 	if (!CurrentWeapon) return;
-	CurrentWeapon->Fire();
+	CurrentWeapon->FireStart();
 }
 
-void ATankPawn::OnFireSpecial()
+void ATankPawn::OnFireStop()
 {
 	if (!CurrentWeapon) return;
-	CurrentWeapon->FireSpecial();
+	CurrentWeapon->FireStop();
+}
+
+void ATankPawn::OnFireSpecialStart()
+{
+	if (!CurrentWeapon) return;
+	CurrentWeapon->FireSpecialStart();
+}
+
+void ATankPawn::OnFireSpecialStop()
+{
+	if (!CurrentWeapon) return;
+	CurrentWeapon->FireSpecialStop();
+}
+
+void ATankPawn::OnReload()
+{
+	if (!CurrentWeapon) return;
+	CurrentWeapon->Reload();
 }
 
 void ATankPawn::PerformMove(const float DeltaTime)
@@ -121,7 +147,7 @@ void ATankPawn::PerformRotateTurret(float DeltaTime) const
 	if (!CurrentController) return;
 
 	const auto CurrentLocation = GetActorLocation();
-	const auto CurrentTurretRotation = TurretMesh->GetComponentRotation();
+	const auto CurrentTurretRotation = WeaponSetupPoint->GetComponentRotation();
 	const auto CurrentMousePosition = CurrentController->GetCurrentMousePosition();
 
 	auto TargetTurretRotation = UKismetMathLibrary::FindLookAtRotation(CurrentLocation, CurrentMousePosition);
@@ -130,5 +156,5 @@ void ATankPawn::PerformRotateTurret(float DeltaTime) const
 
 	const auto NewTurretRotation = FMath::Lerp(CurrentTurretRotation, TargetTurretRotation,
 	                                           TurretRotationInterpolationSpeed);
-	TurretMesh->SetWorldRotation(NewTurretRotation);
+	WeaponSetupPoint->SetWorldRotation(NewTurretRotation);
 }

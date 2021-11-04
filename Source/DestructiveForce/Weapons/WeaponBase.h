@@ -13,70 +13,75 @@ class DESTRUCTIVEFORCE_API AWeaponBase : public AActor
 	GENERATED_BODY()
 
 private:
-	bool isReloading = false;
-
-	int32 CurrentAmmo = 0;
-	int32 CurrentSpecialAmmo = 0;
-
-	FTimerHandle ReloadTimerHandle;
-	FTimerHandle ReloadSpecialTimerHandle;
-
-private:
-	void Reload();
-	void ReloadSpecial();
+	FTimerHandle DelayBetweenTimeHandle;
+	
+	FTimerHandle ReloadFireTimeHandle;
+	FTimerHandle ReloadSpecialFireTimeHandle;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* Mesh;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UArrowComponent* ProjectileSpawnPoint;
+	UArrowComponent* SpawnPoint;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
-	float FireRate = 1;
+	float FireRate = 1.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
-	float FireSpecialRate = 1;
+	float FireSpecialReloadTime = 1.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
-	float FireRange = 1000;
+	int32 MaxAmmoCount = 10;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
-	float FireDamage = 1;
+	int32 CurrentAmmoCount = 10;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
-	int32 MaxAmmo = 10;
+private:
+	void OnFireReload();
+	void OnSpecialFireReload();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
-	int32 FireSpecialIterationCounts = 0;
+	UFUNCTION(BlueprintPure)
+	bool CanReload();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
-	EWeaponFireType Type = EWeaponFireType::Projectile;
+	UFUNCTION(BlueprintPure)
+	bool CanFire() const;
 
+	UFUNCTION(BlueprintPure)
+	bool CanSpecialFire() const;
+
+protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UFUNCTION(BlueprintPure)
+	bool HasAmmo() const;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnReloadEvent();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnFireEvent();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnSpecialFireEvent();
 
 public:
 	AWeaponBase();
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintPure, Category = "Fire")
-	bool CanFire() const;
-
-	UFUNCTION(BlueprintPure, Category = "Fire")
-	bool CanSpecialFire() const;
-	bool IsSpecialFireInProgress() const;
-
-	UFUNCTION(BlueprintPure, Category = "Fire")
-	int32 GetCurrentAmmo() const;
+	UFUNCTION(BlueprintCallable, Category = "Fire")
+	void Reload();
 
 	UFUNCTION(BlueprintCallable, Category = "Fire")
-	void AddAmmo(int32 NumAmmo);
+	void FireStart();
 
 	UFUNCTION(BlueprintCallable, Category = "Fire")
-	void Fire();
+	void FireStop();
 
 	UFUNCTION(BlueprintCallable, Category = "Fire")
-	void FireSpecial();
-	void DoSpecialFireShot();
+	void FireSpecialStart();
+
+	UFUNCTION(BlueprintCallable, Category = "Fire")
+	void FireSpecialStop();
 };

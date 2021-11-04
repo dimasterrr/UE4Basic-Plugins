@@ -14,24 +14,55 @@ AWeaponBase::AWeaponBase()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 
-	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow point"));
-	ProjectileSpawnPoint->SetupAttachment(Mesh);
+	SpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow point"));
+	SpawnPoint->SetupAttachment(Mesh);
 }
 
 void AWeaponBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	AddAmmo(MaxAmmo);
-	Reload();
 }
 
 void AWeaponBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	ReloadTimerHandle.Invalidate();
-	ReloadSpecialTimerHandle.Invalidate();
+	DelayBetweenTimeHandle.Invalidate();
+	ReloadFireTimeHandle.Invalidate();
+	ReloadSpecialFireTimeHandle.Invalidate();
 
 	Super::EndPlay(EndPlayReason);
+}
+
+bool AWeaponBase::HasAmmo() const
+{
+	return CurrentAmmoCount > 0;
+}
+
+
+void AWeaponBase::OnFireReload()
+{
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, "OnFireReload call");
+
+	GetWorldTimerManager().ClearTimer(ReloadFireTimeHandle);
+}
+
+void AWeaponBase::OnSpecialFireReload()
+{
+	GetWorldTimerManager().ClearTimer(ReloadSpecialFireTimeHandle);
+}
+
+void AWeaponBase::OnFireEvent()
+{
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, "OnFire call");
+}
+
+void AWeaponBase::OnSpecialFireEvent()
+{
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, "OnSpecialFire call");
+}
+
+void AWeaponBase::OnReloadEvent()
+{
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, "OnReload call");
 }
 
 void AWeaponBase::Tick(float DeltaTime)
@@ -41,93 +72,53 @@ void AWeaponBase::Tick(float DeltaTime)
 
 void AWeaponBase::Reload()
 {
-	isReloading = false;
+	if (!CanReload()) return;
+
+	OnReloadEvent();
 }
 
-void AWeaponBase::ReloadSpecial()
+bool AWeaponBase::CanReload()
 {
-	isReloading = false;
+	return false;
+}
+
+void AWeaponBase::FireStart()
+{
+	if (!CanFire()) return;
+
+	GetWorldTimerManager().SetTimer(DelayBetweenTimeHandle, this, &AWeaponBase::OnFireEvent, FireRate, true, 0.f);
+}
+
+void AWeaponBase::FireStop()
+{
+	if (!GetWorldTimerManager().IsTimerActive(DelayBetweenTimeHandle)) return;
+	GetWorldTimerManager().ClearTimer(DelayBetweenTimeHandle);
+
+	if (GetWorldTimerManager().IsTimerActive(ReloadFireTimeHandle)) return;
+	GetWorldTimerManager().SetTimer(ReloadFireTimeHandle, this, &AWeaponBase::OnFireReload, FireRate);
 }
 
 bool AWeaponBase::CanFire() const
 {
-	return !isReloading && CurrentAmmo > 0 && !IsSpecialFireInProgress();
+	return !GetWorld()->GetTimerManager().IsTimerActive(ReloadFireTimeHandle)
+		&& HasAmmo();
 }
 
+void AWeaponBase::FireSpecialStart()
+{
+	if (!CanSpecialFire()) return;
+
+	OnSpecialFireEvent();
+	GetWorld()->GetTimerManager().SetTimer(ReloadSpecialFireTimeHandle, this, &AWeaponBase::OnSpecialFireReload,
+	                                       FireSpecialReloadTime);
+}
+
+void AWeaponBase::FireSpecialStop()
+{
+}
 
 bool AWeaponBase::CanSpecialFire() const
 {
-	return FireSpecialIterationCounts > 0;
-}
-
-bool AWeaponBase::IsSpecialFireInProgress() const
-{
-	return CurrentSpecialAmmo > 0;
-}
-
-int32 AWeaponBase::GetCurrentAmmo() const
-{
-	return CurrentAmmo;
-}
-
-void AWeaponBase::AddAmmo(const int32 NumAmmo)
-{
-	CurrentAmmo = FMath::Clamp(0, MaxAmmo, CurrentAmmo + NumAmmo);
-
-	UE_LOG(LogTemp, Display, TEXT("AddAmmo(%d): CurrentAmmo=%d"), NumAmmo, CurrentAmmo);
-}
-
-void AWeaponBase::Fire()
-{
-	if (!CanFire()) return;
-
-	if (Type == EWeaponFireType::Projectile) GEngine->
-		AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - projectile");
-	else GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - trace");
-
-	--CurrentAmmo;
-	UE_LOG(LogTemp, Display, TEXT("Fire: CurrentAmmo=%d"), CurrentAmmo);
-
-	isReloading = true;
-
-	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &AWeaponBase::Reload, 1 / FireRate, false);
-}
-
-void AWeaponBase::FireSpecial()
-{
-	if (!CanFire() || !CanSpecialFire()) return;
-
-	if (Type == EWeaponFireType::Projectile)
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Green, "Fire - projectile");
-	else GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Green, "Fire - trace");
-
-	--CurrentAmmo;
-	UE_LOG(LogTemp, Display, TEXT("Special fire started: CurrentAmmo=%d"), CurrentAmmo);
-
-	// Reset special ammo
-	CurrentSpecialAmmo = FireSpecialIterationCounts;
-	DoSpecialFireShot();
-}
-
-void AWeaponBase::DoSpecialFireShot()
-{
-	--CurrentSpecialAmmo;
-
-	if (Type == EWeaponFireType::Projectile)
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Green, "SpecialFire - projectile");
-	else GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Green, "SpecialFire - trace");
-
-	if (CurrentSpecialAmmo > 0)
-	{
-		GetWorld()->GetTimerManager().SetTimer(ReloadSpecialTimerHandle, this, &AWeaponBase::DoSpecialFireShot,
-		                                       FireSpecialRate, false);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Display, TEXT("Special fire finished!"));
-
-		ReloadSpecialTimerHandle.Invalidate();
-		isReloading = true;
-		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &AWeaponBase::Reload, 1.f / FireRate, false);
-	}
+	return !GetWorld()->GetTimerManager().IsTimerActive(ReloadSpecialFireTimeHandle)
+		&& HasAmmo();
 }
