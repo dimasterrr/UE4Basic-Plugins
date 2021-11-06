@@ -35,21 +35,36 @@ ATankPawn::ATankPawn()
 void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	// Setup Weapon
+
 	SetWeapon(DefaultWeaponClass);
 }
 
 void ATankPawn::SetWeapon(const TSubclassOf<AWeaponBase> WeaponClass)
 {
 	if (!WeaponClass) return;
-	if (CurrentWeapon) CurrentWeapon->Destroy();
+	if (EquipWeapons.Num() == MaxEquipWeapons) EquipWeapons.RemoveAt(EquipWeaponIndex);
 
 	FActorSpawnParameters Parameters;
 	Parameters.Instigator = this;
 	Parameters.Owner = this;
 
-	CurrentWeapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, Parameters);
-	CurrentWeapon->AttachToComponent(WeaponSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	const auto NewWeapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, Parameters);
+	NewWeapon->AttachToComponent(WeaponSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+	EquipWeaponIndex = EquipWeapons.Add(NewWeapon);
+
+	// TODO: Add switch weapon visibility
+}
+
+void ATankPawn::AddAmmoToWeapon(const TSubclassOf<AWeaponBase>& WeaponClass, const int Value)
+{
+	const auto FindWeapon = EquipWeapons.FindByPredicate([&WeaponClass](const AWeaponBase* Weapon)
+	{
+		return Weapon->GetClass() == WeaponClass;
+	});
+	if (!FindWeapon) return;
+
+	(*FindWeapon)->AddAmmo(Value);
 }
 
 void ATankPawn::Tick(float DeltaTime)
@@ -70,11 +85,12 @@ void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATankPawn::OnFireStart);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ATankPawn::OnFireStop);
-	
+
 	PlayerInputComponent->BindAction("FireSpecial", IE_Pressed, this, &ATankPawn::OnFireSpecialStart);
 	PlayerInputComponent->BindAction("FireSpecial", IE_Released, this, &ATankPawn::OnFireSpecialStop);
-	
+
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ATankPawn::OnReload);
+	PlayerInputComponent->BindAction("SwitchWeapon", IE_Pressed, this, &ATankPawn::OnSwitchWeapon);
 }
 
 void ATankPawn::OnMoveForward(const float Value)
@@ -89,32 +105,47 @@ void ATankPawn::OnTurnRight(const float Value)
 
 void ATankPawn::OnFireStart()
 {
+	const auto CurrentWeapon = GetActiveWeapon();
+
 	if (!CurrentWeapon) return;
 	CurrentWeapon->FireStart();
 }
 
 void ATankPawn::OnFireStop()
 {
+	const auto CurrentWeapon = GetActiveWeapon();
+
 	if (!CurrentWeapon) return;
 	CurrentWeapon->FireStop();
 }
 
 void ATankPawn::OnFireSpecialStart()
 {
+	const auto CurrentWeapon = GetActiveWeapon();
+
 	if (!CurrentWeapon) return;
 	CurrentWeapon->FireSpecialStart();
 }
 
 void ATankPawn::OnFireSpecialStop()
 {
+	const auto CurrentWeapon = GetActiveWeapon();
+
 	if (!CurrentWeapon) return;
 	CurrentWeapon->FireSpecialStop();
 }
 
 void ATankPawn::OnReload()
 {
+	const auto CurrentWeapon = GetActiveWeapon();
+
 	if (!CurrentWeapon) return;
 	CurrentWeapon->Reload();
+}
+
+void ATankPawn::OnSwitchWeapon()
+{
+	EquipWeaponIndex = (EquipWeaponIndex + 1) % FMath::Min(EquipWeapons.Num(), MaxEquipWeapons);
 }
 
 void ATankPawn::PerformMove(const float DeltaTime)
@@ -157,4 +188,10 @@ void ATankPawn::PerformRotateTurret(float DeltaTime) const
 	const auto NewTurretRotation = FMath::Lerp(CurrentTurretRotation, TargetTurretRotation,
 	                                           TurretRotationInterpolationSpeed);
 	WeaponSetupPoint->SetWorldRotation(NewTurretRotation);
+}
+
+AWeaponBase* ATankPawn::GetActiveWeapon() const
+{
+	if (EquipWeaponIndex == INDEX_NONE) return nullptr;
+	return EquipWeapons[EquipWeaponIndex];
 }

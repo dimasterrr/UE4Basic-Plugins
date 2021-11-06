@@ -117,6 +117,11 @@ void AWeaponBase::FireSpecialStop()
 {
 }
 
+void AWeaponBase::AddAmmo(const int Value)
+{
+	CurrentAmmoCount = FMath::Clamp(CurrentAmmoCount + Value, 0, MaxAmmoCount);
+}
+
 bool AWeaponBase::CanSpecialFire() const
 {
 	return !GetWorld()->GetTimerManager().IsTimerActive(ReloadSpecialFireTimeHandle)

@@ -8,6 +8,11 @@ AWeaponTrace::AWeaponTrace()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+AWeaponTrace::~AWeaponTrace()
+{
+	SpecialFireRateDelay.Invalidate();
+}
+
 void AWeaponTrace::OnFireEvent()
 {
 	if (!HasAmmo()) return;

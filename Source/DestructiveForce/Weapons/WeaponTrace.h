@@ -39,4 +39,5 @@ protected:
 
 public:
 	AWeaponTrace();
+	~AWeaponTrace();
 };

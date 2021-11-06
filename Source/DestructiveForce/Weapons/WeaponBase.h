@@ -84,4 +84,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Fire")
 	void FireSpecialStop();
+	
+	UFUNCTION(BlueprintCallable, Category = "Fire")
+	void AddAmmo(int Value);
 };

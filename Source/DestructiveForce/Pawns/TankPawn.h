@@ -57,31 +57,45 @@ protected:
 	TSubclassOf<AWeaponBase> DefaultWeaponClass;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Turret|Weapon")
-	AWeaponBase* CurrentWeapon;
+	TArray<AWeaponBase*> EquipWeapons;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Turret|Weapon")
+	int MaxEquipWeapons = 2;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Turret|Weapon")
+	int EquipWeaponIndex = INDEX_NONE;
 
 private:
 	void OnMoveForward(const float Value);
 	void OnTurnRight(const float Value);
-	
+
 	void OnFireStart();
 	void OnFireStop();
-	
+
 	void OnFireSpecialStart();
 	void OnFireSpecialStop();
-	
+
 	void OnReload();
+	void OnSwitchWeapon();
 
 	void PerformMove(float DeltaTime);
 	void PerformRotate(float DeltaTime);
 	void PerformRotateTurret(float DeltaTime) const;
 
+	AWeaponBase* GetActiveWeapon() const;
+
 protected:
 	virtual void BeginPlay() override;
-	void SetWeapon(TSubclassOf<AWeaponBase> WeaponClass);
 
 public:
 	ATankPawn();
 
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION(BlueprintCallable)
+	void SetWeapon(TSubclassOf<AWeaponBase> WeaponClass);
+
+	UFUNCTION(BlueprintCallable)
+	void AddAmmoToWeapon(const TSubclassOf<AWeaponBase>& WeaponClass, int Value);
 };
