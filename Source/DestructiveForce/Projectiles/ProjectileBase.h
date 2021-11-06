@@ -11,10 +11,10 @@ class DESTRUCTIVEFORCE_API AProjectileBase : public AActor
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* Mesh;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UStaticMeshComponent* Mesh;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
 public:

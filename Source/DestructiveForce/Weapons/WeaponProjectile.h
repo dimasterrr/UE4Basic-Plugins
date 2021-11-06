@@ -12,7 +12,7 @@ class DESTRUCTIVEFORCE_API AWeaponProjectile : public AWeaponBase
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category="Settings|Debug")
+	UPROPERTY(EditDefaultsOnly, Category="Settings")
 	TSubclassOf<AProjectileBase> DefaultProjectileClass;
 
 private:

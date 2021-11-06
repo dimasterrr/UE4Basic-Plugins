@@ -4,7 +4,7 @@
 
 AProjectileBase::AProjectileBase()
 {
-	RootComponent = Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
+	RootComponent = Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
 }
