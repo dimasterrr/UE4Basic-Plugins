@@ -40,8 +40,6 @@ bool AWeaponBase::HasAmmo() const
 
 void AWeaponBase::OnFireReload()
 {
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, "OnFireReload call");
-
 	GetWorldTimerManager().ClearTimer(ReloadFireTimeHandle);
 }
 
@@ -52,17 +50,14 @@ void AWeaponBase::OnSpecialFireReload()
 
 void AWeaponBase::OnFireEvent()
 {
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, "OnFire call");
 }
 
 void AWeaponBase::OnSpecialFireEvent()
 {
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, "OnSpecialFire call");
 }
 
 void AWeaponBase::OnReloadEvent()
 {
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5.f, FColor::Red, "OnReload call");
 }
 
 void AWeaponBase::Tick(float DeltaTime)
