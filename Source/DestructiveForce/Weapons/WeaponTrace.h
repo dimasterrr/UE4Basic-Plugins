@@ -16,6 +16,9 @@ private:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Settings")
 	float TraceDistance = 1000.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Settings")
+	float Damage = 20.f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Settings|Special")
 	int MaxSpecialFireCount = 4;

@@ -1,6 +1,7 @@
 ﻿#include "WeaponTrace.h"
 
 #include "Components/ArrowComponent.h"
+#include "DestructiveForce/Base/Health/Interfaces/DamageTaker.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 AWeaponTrace::AWeaponTrace()
@@ -41,6 +42,15 @@ void AWeaponTrace::OnLaunchTrace() const
 	FHitResult HitResult;
 	UKismetSystemLibrary::LineTraceSingle(this, StartPoint, EndPoint, TraceChannel, false, {}, DrawType,
 										  HitResult, true);
+
+	if (const auto DamageTaker = Cast<IDamageTaker>(HitResult.GetActor()))
+	{
+		FDamageData DamageData;
+		DamageData.Damage = Damage;
+		DamageData.Instigator = GetOwner();
+
+		DamageTaker->TakeDamage(DamageData);
+	}
 }
 
 void AWeaponTrace::OnSpecialLaunchTrace()
