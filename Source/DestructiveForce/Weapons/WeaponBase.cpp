@@ -34,7 +34,7 @@ void AWeaponBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 bool AWeaponBase::HasAmmo() const
 {
-	return CurrentAmmoCount > 0;
+	return InfiniteAmmo || CurrentAmmoCount > 0;
 }
 
 
@@ -121,4 +121,9 @@ bool AWeaponBase::CanSpecialFire() const
 {
 	return !GetWorld()->GetTimerManager().IsTimerActive(ReloadSpecialFireTimeHandle)
 		&& HasAmmo();
+}
+
+void AWeaponBase::SetInfiniteAmmo(const bool Value)
+{
+	InfiniteAmmo = Value;
 }

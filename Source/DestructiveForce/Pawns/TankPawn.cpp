@@ -27,8 +27,6 @@ ATankPawn::ATankPawn()
 void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
-	SetWeapon(DefaultWeaponClass);
 }
 
 void ATankPawn::Tick(float DeltaTime)

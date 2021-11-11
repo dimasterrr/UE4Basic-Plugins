@@ -31,11 +31,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
 	float FireSpecialReloadTime = 1.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings|Ammo")
 	int32 MaxAmmoCount = 10;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings|Ammo")
 	int32 CurrentAmmoCount = 10;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings|Ammo")
+	bool InfiniteAmmo = false;
 
 private:
 	void OnFireReload();
@@ -87,4 +90,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Fire")
 	void AddAmmo(int Value);
+
+	UFUNCTION(BlueprintCallable, Category = "Fire")
+	void SetInfiniteAmmo(const bool Value);
 };

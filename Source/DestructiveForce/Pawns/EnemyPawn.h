@@ -9,12 +9,18 @@ class DESTRUCTIVEFORCE_API AEnemyPawn : public APawnBase
 {
 	GENERATED_BODY()
 
+private:
+	FTimerHandle FWaitingTargetHandle;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Settings|Targetting")
 	float PatrollingRotationSpeed = .4f;
 
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing=OnRep_TargetIsChanged)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AActor* Target;
+
+	UPROPERTY(EditDefaultsOnly, Category="Settings|Targettting")
+	float WaitTimeWhenTargetLost = 4.f;
 
 	UPROPERTY(EditDefaultsOnly, Category="Settings|Target")
 	TEnumAsByte<ETraceTypeQuery> TraceChannel;
@@ -30,18 +36,24 @@ private:
 	void PerformRotateToTarget(const float DeltaTime) const;
 
 	UFUNCTION()
-	virtual void OnRep_TargetIsChanged();
+	void OnTargetIsChanged();
 
 protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	bool IsTargetVisible() const;
+	
+	UFUNCTION()
+	void OnWaitTargetPosition();
 
 	virtual void OnDieEvent() override;
-
 public:
 	AEnemyPawn();
 
 	virtual void Tick(float DeltaTime) override;
+	virtual void TakeDamage(const FDamageData& Data) override;
+
+	UFUNCTION(BlueprintCallable)
+	void SetTarget(AActor* NewTarget);
 };
