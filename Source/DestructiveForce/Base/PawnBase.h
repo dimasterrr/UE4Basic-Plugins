@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Health/Interfaces/DamageTaker.h"
+#include "Score/Interface/Scorable.h"
 #include "PawnBase.generated.h"
 
 class AWeaponBase;
@@ -12,7 +13,7 @@ class UStaticMeshComponent;
 class UHealthComponent;
 
 UCLASS()
-class DESTRUCTIVEFORCE_API APawnBase : public APawn, public IDamageTaker
+class DESTRUCTIVEFORCE_API APawnBase : public APawn, public IDamageTaker, public IScorable
 {
 	GENERATED_BODY()
 
@@ -29,17 +30,20 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UHealthComponent* HealthComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings|Weapon")
 	TSubclassOf<AWeaponBase> DefaultWeaponClass;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Turret|Weapon")
+	UPROPERTY(BlueprintReadOnly, Category = "Settings|Weapon")
 	TArray<AWeaponBase*> EquipWeapons;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Turret|Weapon")
+	UPROPERTY(BlueprintReadOnly, Category = "Settings|Weapon")
 	int MaxEquipWeapons = 2;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Turret|Weapon")
+	UPROPERTY(BlueprintReadOnly, Category = "Settings|Weapon")
 	int EquipWeaponIndex = INDEX_NONE;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Score")
+	int ScoreByDie = 20;
 
 protected:
 	virtual void BeginPlay() override;
@@ -79,5 +83,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddAmmoToWeapon(const TSubclassOf<AWeaponBase>& WeaponClass, int Value);
 
-	virtual void TakeDamage(const FDamageData& Data) override;
+	virtual bool TakeDamage(const FDamageData& Data) override;
+
+	virtual int GetDieScore() const override;
 };

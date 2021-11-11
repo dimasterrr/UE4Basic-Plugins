@@ -103,11 +103,11 @@ void AEnemyPawn::OnWaitTargetPosition()
 	GetWorldTimerManager().ClearTimer(FWaitingTargetHandle);
 }
 
-void AEnemyPawn::TakeDamage(const FDamageData& Data)
+bool AEnemyPawn::TakeDamage(const FDamageData& Data)
 {
-	Super::TakeDamage(Data);
+	return Super::TakeDamage(Data);
 
-	if (!Target) SetTarget(Data.Instigator);
+	// if (!Target) SetTarget(Data.Instigator);
 }
 
 void AEnemyPawn::OnDieEvent()

@@ -123,9 +123,15 @@ void APawnBase::AddAmmoToWeapon(const TSubclassOf<AWeaponBase>& WeaponClass, con
 	(*FindWeapon)->AddAmmo(Value);
 }
 
-void APawnBase::TakeDamage(const FDamageData& Data)
+bool APawnBase::TakeDamage(const FDamageData& Data)
 {
 	const auto CurrentHealth = HealthComponent->GetHealth();
-
 	HealthComponent->SetHealth(CurrentHealth - Data.Damage);
+
+	return HealthComponent->IsDie();
+}
+
+int APawnBase::GetDieScore() const
+{
+	return ScoreByDie;
 }

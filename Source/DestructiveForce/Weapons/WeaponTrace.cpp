@@ -32,7 +32,7 @@ void AWeaponTrace::OnSpecialFireEvent()
 	--CurrentAmmoCount;
 }
 
-void AWeaponTrace::OnLaunchTrace() const
+void AWeaponTrace::OnLaunchTrace()
 {
 	const auto StartPoint = SpawnPoint->GetComponentLocation();
 	const auto StartPointForward = SpawnPoint->GetForwardVector();
@@ -47,7 +47,8 @@ void AWeaponTrace::OnLaunchTrace() const
 	{
 		FDamageData DamageData;
 		DamageData.Damage = Damage;
-		DamageData.Instigator = GetOwner();
+		DamageData.Owner = this;
+		DamageData.Instigator = GetInstigator();
 
 		DamageTaker->TakeDamage(DamageData);
 	}

@@ -1,6 +1,8 @@
 ﻿#include "ProjectileBase.h"
 
+#include "DestructiveForce/Base/GlobalPlayerState.h"
 #include "DestructiveForce/Base/Health/Interfaces/DamageTaker.h"
+#include "DestructiveForce/Base/Score/Interface/Scorable.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 AProjectileBase::AProjectileBase()
@@ -17,13 +19,22 @@ void AProjectileBase::OnBounce(const FHitResult& ImpactResult, const FVector& Im
 	// TODO: Add super effects
 
 
+	auto TargetIsDie = false;
 	if (const auto DamageTaker = Cast<IDamageTaker>(ImpactResult.GetActor()))
 	{
 		FDamageData DamageData;
 		DamageData.Damage = Damage;
-		DamageData.Instigator = GetOwner();
+		DamageData.Owner = GetOwner();
+		DamageData.Instigator = GetInstigator();
 
-		DamageTaker->TakeDamage(DamageData);
+		TargetIsDie = DamageTaker->TakeDamage(DamageData);
+	}
+
+	if (const auto Scorable = Cast<IScorable>(ImpactResult.GetActor()))
+	{
+		const auto PlayerState = GetInstigator()->GetPlayerState<AGlobalPlayerState>();
+		if (PlayerState && TargetIsDie)
+			PlayerState->AddScores(Scorable->GetDieScore());
 	}
 
 	Release();

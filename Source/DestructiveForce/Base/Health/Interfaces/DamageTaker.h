@@ -13,7 +13,10 @@ struct FDamageData
 	float Damage;
 
 	UPROPERTY()
-	AActor* Instigator = nullptr;
+	AActor* Owner = nullptr;
+
+	UPROPERTY()
+	APawn* Instigator = nullptr;
 };
 
 UINTERFACE()
@@ -27,6 +30,5 @@ class DESTRUCTIVEFORCE_API IDamageTaker
 	GENERATED_BODY()
 
 public:
-
-	virtual void TakeDamage(const FDamageData& Data) = 0;
+	virtual bool TakeDamage(const FDamageData& Data) = 0;
 };

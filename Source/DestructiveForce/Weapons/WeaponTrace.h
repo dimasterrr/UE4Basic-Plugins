@@ -33,7 +33,7 @@ protected:
 	bool DrawTrace = false;
 
 private:
-	void OnLaunchTrace() const;
+	void OnLaunchTrace();
 	void OnSpecialLaunchTrace();
 
 protected:

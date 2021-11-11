@@ -17,12 +17,12 @@ protected:
 
 private:
 	UFUNCTION()
-	void OnLaunchProjectile() const;
+	void OnLaunchProjectile();
 
 protected:
 	virtual void OnFireEvent() override;
 	virtual void OnSpecialFireEvent() override;
-	
+
 public:
 	AWeaponProjectile();
 };

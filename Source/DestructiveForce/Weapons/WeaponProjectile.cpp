@@ -26,7 +26,7 @@ void AWeaponProjectile::OnSpecialFireEvent()
 	CurrentAmmoCount--;
 }
 
-void AWeaponProjectile::OnLaunchProjectile() const
+void AWeaponProjectile::OnLaunchProjectile()
 {
 	const auto GameMode = Cast<ADestructiveForceGameModeBase>(GetWorld()->GetAuthGameMode());
 	if (!GameMode) return;
@@ -39,8 +39,8 @@ void AWeaponProjectile::OnLaunchProjectile() const
 	SpawnTransform.SetRotation(SpawnPoint->GetComponentRotation().Quaternion());
 
 	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.Owner = this;
 	SpawnParameters.Instigator = GetInstigator();
-	SpawnParameters.Owner = GetOwner();
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	ProjectilePool->GetOrCreate(DefaultProjectileClass, SpawnTransform, SpawnParameters);

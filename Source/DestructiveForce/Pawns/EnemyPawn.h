@@ -55,7 +55,7 @@ public:
 	AEnemyPawn();
 
 	virtual void Tick(float DeltaTime) override;
-	virtual void TakeDamage(const FDamageData& Data) override;
+	virtual bool TakeDamage(const FDamageData& Data) override;
 
 	UFUNCTION(BlueprintCallable)
 	void SetTarget(AActor* NewTarget);
