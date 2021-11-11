@@ -13,20 +13,23 @@ private:
 	FTimerHandle FWaitingTargetHandle;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category="Settings")
+	float RotationLagRate = .4f;
+	
 	UPROPERTY(EditDefaultsOnly, Category="Settings|Targetting")
 	float PatrollingRotationSpeed = .4f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* Target;
-
-	UPROPERTY(EditDefaultsOnly, Category="Settings|Targettting")
+	UPROPERTY(EditDefaultsOnly, Category="Settings|Targetting")
 	float WaitTimeWhenTargetLost = 4.f;
-
-	UPROPERTY(EditDefaultsOnly, Category="Settings|Target")
+	
+	UPROPERTY(EditDefaultsOnly, Category="Settings|Targetting")
 	TEnumAsByte<ETraceTypeQuery> TraceChannel;
 
-	UPROPERTY(EditDefaultsOnly, Category="Settings|Target|Debug")
+	UPROPERTY(EditDefaultsOnly, Category="Settings|Targetting|Debug")
 	bool bDrawTargetTraceVisible = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* Target;
 
 private:
 	UFUNCTION()

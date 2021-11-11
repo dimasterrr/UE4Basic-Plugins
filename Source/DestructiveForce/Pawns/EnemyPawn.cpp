@@ -64,7 +64,7 @@ void AEnemyPawn::PerformRotateToTarget(const float DeltaTime) const
 		RotationToTarget.Pitch = CurrentWeaponRotation.Pitch;
 		RotationToTarget.Roll = CurrentWeaponRotation.Roll;
 
-		NewRotation = RotationToTarget;
+		NewRotation = FMath::Lerp(CurrentRotation, RotationToTarget, RotationLagRate);
 	}
 	else
 	{
@@ -100,7 +100,7 @@ bool AEnemyPawn::IsTargetVisible() const
 
 void AEnemyPawn::OnWaitTargetPosition()
 {
-	FWaitingTargetHandle.Invalidate();
+	GetWorldTimerManager().ClearTimer(FWaitingTargetHandle);
 }
 
 void AEnemyPawn::TakeDamage(const FDamageData& Data)
