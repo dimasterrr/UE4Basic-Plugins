@@ -16,6 +16,7 @@ protected:
 	TSubclassOf<AProjectileBase> DefaultProjectileClass;
 
 private:
+	UFUNCTION()
 	void OnLaunchProjectile() const;
 
 protected:

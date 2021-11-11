@@ -1,5 +1,6 @@
 ﻿#include "ProjectileBase.h"
 
+#include "DestructiveForce/Base/Health/Interfaces/DamageTaker.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 AProjectileBase::AProjectileBase()
@@ -14,6 +15,16 @@ AProjectileBase::AProjectileBase()
 void AProjectileBase::OnBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
 {
 	// TODO: Add super effects
+
+
+	if (const auto DamageTaker = Cast<IDamageTaker>(ImpactResult.GetActor()))
+	{
+		FDamageData DamageData;
+		DamageData.Damage = Damage;
+		DamageData.Instigator = GetOwner();
+
+		DamageTaker->TakeDamage(DamageData);
+	}
 
 	Release();
 }

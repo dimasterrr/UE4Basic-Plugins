@@ -18,6 +18,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
+	float Damage = 20.f;
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	void OnBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity);

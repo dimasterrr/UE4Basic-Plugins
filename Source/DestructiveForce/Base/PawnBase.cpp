@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DestructiveForce/Weapons/WeaponBase.h"
+#include "Health/HealthComponent.h"
 
 APawnBase::APawnBase()
 {
@@ -19,6 +20,16 @@ APawnBase::APawnBase()
 
 	WeaponSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Weapon Point"));
 	WeaponSetupPoint->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform);
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
+	HealthComponent->OnDieDelegate.AddUObject(this, &APawnBase::OnDieEvent);
+}
+
+void APawnBase::Destroyed()
+{
+	Super::Destroyed();
+
+	for (const auto& Weapon : EquipWeapons) Weapon->Destroy();
 }
 
 void APawnBase::BeginPlay()
@@ -83,6 +94,18 @@ void APawnBase::OnReload()
 	CurrentWeapon->Reload();
 }
 
+void APawnBase::OnSwitchWeapon()
+{
+	OnFireStop();
+
+	EquipWeaponIndex = (EquipWeaponIndex + 1) % FMath::Min(EquipWeapons.Num(), MaxEquipWeapons);
+}
+
+void APawnBase::OnDieEvent()
+{
+	OnFireStop();
+}
+
 AWeaponBase* APawnBase::GetActiveWeapon() const
 {
 	if (EquipWeaponIndex == INDEX_NONE) return nullptr;
@@ -100,7 +123,9 @@ void APawnBase::AddAmmoToWeapon(const TSubclassOf<AWeaponBase>& WeaponClass, con
 	(*FindWeapon)->AddAmmo(Value);
 }
 
-void APawnBase::OnSwitchWeapon()
+void APawnBase::TakeDamage(const FDamageData& Data)
 {
-	EquipWeaponIndex = (EquipWeaponIndex + 1) % FMath::Min(EquipWeapons.Num(), MaxEquipWeapons);
+	const auto CurrentHealth = HealthComponent->GetHealth();
+
+	HealthComponent->SetHealth(CurrentHealth - Data.Damage);
 }
