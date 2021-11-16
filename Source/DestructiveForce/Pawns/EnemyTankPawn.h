@@ -22,4 +22,6 @@ public:
 	AEnemyTankPawn();
 
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void OnDieEvent() override;
 };

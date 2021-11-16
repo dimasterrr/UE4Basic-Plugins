@@ -1,5 +1,5 @@
 ﻿#include "TankPlayerController.h"
-#include "DrawDebugHelpers.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ATankPlayerController::ATankPlayerController()
 {
@@ -10,29 +10,37 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	PerformMousePosition();
+	PerformMousePosition(DeltaSeconds);
 }
 
-void ATankPlayerController::PerformMousePosition()
+void ATankPlayerController::PerformMousePosition(const float DeltaSeconds)
 {
-	const auto CurrentPawn = GetPawn();
-	if (!CurrentPawn) return;
+	if (!PossessedPawn) return;
 
 	FVector MousePosition, MouseDirection;
 	DeprojectMousePositionToWorld(MousePosition, MouseDirection);
 
-	const auto PawnPosition = CurrentPawn->GetActorLocation();
+	const auto PawnPosition = PossessedPawn->GetActorLocation();
 
 	auto Direction = MousePosition - PlayerCameraManager->GetCameraLocation();
 	Direction.Normalize();
 
-	CurrentMousePosition = MousePosition + Direction * 1000.f;
+	auto CurrentMousePosition = MousePosition + Direction * 1000.f;
 	CurrentMousePosition.Z = PawnPosition.Z;
+	
+	const auto CurrentLocation = PossessedPawn->GetActorLocation();
+	const auto CurrentTurretRotation = PossessedPawn->GetActorRotation(); // TODO: Rotation turret
 
-	DrawDebugLine(GetWorld(), PawnPosition, CurrentMousePosition, FColor::Blue, false, 0, 0, 5);
+	auto TargetTurretRotation = UKismetMathLibrary::FindLookAtRotation(CurrentLocation, CurrentMousePosition);
+	TargetTurretRotation.Pitch = CurrentTurretRotation.Pitch;
+	TargetTurretRotation.Roll = CurrentTurretRotation.Roll;
+
+	PossessedPawn->SetTurretRotation(TargetTurretRotation);
 }
 
-FVector ATankPlayerController::GetCurrentMousePosition() const
+void ATankPlayerController::OnPossess(APawn* InPawn)
 {
-	return CurrentMousePosition;
+	Super::OnPossess(InPawn);
+
+	PossessedPawn = Cast<ATankPawn>(InPawn);
 }

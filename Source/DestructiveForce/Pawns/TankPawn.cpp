@@ -25,18 +25,13 @@ void ATankPawn::Tick(float DeltaTime)
 
 void ATankPawn::PerformRotateTurret(float DeltaTime) const
 {
-	const auto CurrentController = Cast<ATankPlayerController>(GetController());
-	if (!CurrentController) return;
+	const auto CurrentRotation = WeaponSetupPoint->GetComponentRotation();
+	const auto NewRotation = FMath::Lerp(CurrentRotation, CurrentTurretRotation, TurretRotationInterpolationSpeed);
 
-	const auto CurrentLocation = GetActorLocation();
-	const auto CurrentTurretRotation = WeaponSetupPoint->GetComponentRotation();
-	const auto CurrentMousePosition = CurrentController->GetCurrentMousePosition();
+	WeaponSetupPoint->SetWorldRotation(NewRotation);
+}
 
-	auto TargetTurretRotation = UKismetMathLibrary::FindLookAtRotation(CurrentLocation, CurrentMousePosition);
-	TargetTurretRotation.Pitch = CurrentTurretRotation.Pitch;
-	TargetTurretRotation.Roll = CurrentTurretRotation.Roll;
-
-	const auto NewTurretRotation = FMath::Lerp(CurrentTurretRotation, TargetTurretRotation,
-	                                           TurretRotationInterpolationSpeed);
-	WeaponSetupPoint->SetWorldRotation(NewTurretRotation);
+void ATankPawn::SetTurretRotation(const FRotator Value)
+{
+	CurrentTurretRotation = Value;
 }

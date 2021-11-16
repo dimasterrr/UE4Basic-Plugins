@@ -48,6 +48,20 @@ protected:
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	APawnBase();
+
+	virtual void Destroyed() override;
+
+	UFUNCTION(BlueprintCallable)
+	AWeaponBase* GetActiveWeapon() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetWeapon(TSubclassOf<AWeaponBase> WeaponClass);
+
+	UFUNCTION(BlueprintCallable)
+	void AddAmmoToWeapon(const TSubclassOf<AWeaponBase>& WeaponClass, int Value);
+
 	UFUNCTION(BlueprintCallable)
 	void OnFireStart();
 
@@ -67,21 +81,7 @@ protected:
 	void OnSwitchWeapon();
 
 	UFUNCTION(BlueprintCallable)
-	AWeaponBase* GetActiveWeapon() const;
-
-	UFUNCTION(BlueprintCallable)
 	virtual void OnDieEvent();
-
-public:
-	APawnBase();
-
-	virtual void Destroyed() override;
-
-	UFUNCTION(BlueprintCallable)
-	void SetWeapon(TSubclassOf<AWeaponBase> WeaponClass);
-
-	UFUNCTION(BlueprintCallable)
-	void AddAmmoToWeapon(const TSubclassOf<AWeaponBase>& WeaponClass, int Value);
 
 	virtual bool TakeDamage(const FDamageData& Data) override;
 

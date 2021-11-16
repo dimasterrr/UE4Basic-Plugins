@@ -20,9 +20,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float TurretRotationInterpolationSpeed = .4f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Movement|Turret")
+	FRotator CurrentTurretRotation;
+
+protected:
+	void PerformRotateTurret(float DeltaTime) const;
+
 public:
 	ATankPawn();
 
 	virtual void Tick(float DeltaTime) override;
-	void PerformRotateTurret(float DeltaTime) const;
+
+	void SetTurretRotation(const FRotator Value);
 };
