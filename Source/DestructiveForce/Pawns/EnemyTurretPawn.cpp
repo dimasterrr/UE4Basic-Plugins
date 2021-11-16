@@ -1,4 +1,4 @@
-﻿#include "EnemyPawn.h"
+﻿#include "EnemyTurretPawn.h"
 
 #include "TankPawn.h"
 #include "Components/ArrowComponent.h"
@@ -7,13 +7,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
-AEnemyPawn::AEnemyPawn()
+AEnemyTurretPawn::AEnemyTurretPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
-void AEnemyPawn::BeginPlay()
+void AEnemyTurretPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -21,7 +21,7 @@ void AEnemyPawn::BeginPlay()
 		CurrentWeapon->SetInfiniteAmmo(true);
 }
 
-void AEnemyPawn::Tick(float DeltaTime)
+void AEnemyTurretPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -31,7 +31,7 @@ void AEnemyPawn::Tick(float DeltaTime)
 	PerformRotateToTarget(DeltaTime);
 }
 
-void AEnemyPawn::PerformValidateTarget(const float DeltaTime)
+void AEnemyTurretPawn::PerformValidateTarget(const float DeltaTime)
 {
 	const auto CurrentWeapon = GetActiveWeapon();
 	const auto StartPoint = CurrentWeapon->GetActorLocation();
@@ -48,7 +48,7 @@ void AEnemyPawn::PerformValidateTarget(const float DeltaTime)
 	SetTarget(CTarget);
 }
 
-void AEnemyPawn::PerformRotateToTarget(const float DeltaTime) const
+void AEnemyTurretPawn::PerformRotateToTarget(const float DeltaTime) const
 {
 	if (FWaitingTargetHandle.IsValid()) return;
 
@@ -74,7 +74,7 @@ void AEnemyPawn::PerformRotateToTarget(const float DeltaTime) const
 	WeaponSetupPoint->SetWorldRotation(NewRotation, true);
 }
 
-void AEnemyPawn::SetTarget(AActor* NewTarget)
+void AEnemyTurretPawn::SetTarget(AActor* NewTarget)
 {
 	if (Target == NewTarget) return;
 
@@ -82,35 +82,35 @@ void AEnemyPawn::SetTarget(AActor* NewTarget)
 	OnTargetIsChanged();
 }
 
-void AEnemyPawn::OnTargetIsChanged()
+void AEnemyTurretPawn::OnTargetIsChanged()
 {
 	if (Target) OnFireStart();
 	else
 	{
 		OnFireStop();
-		GetWorldTimerManager().SetTimer(FWaitingTargetHandle, this, &AEnemyPawn::OnWaitTargetPosition,
+		GetWorldTimerManager().SetTimer(FWaitingTargetHandle, this, &AEnemyTurretPawn::OnWaitTargetPosition,
 		                                WaitTimeWhenTargetLost, false);
 	}
 }
 
-bool AEnemyPawn::IsTargetVisible() const
+bool AEnemyTurretPawn::IsTargetVisible() const
 {
 	return Target != nullptr;
 }
 
-void AEnemyPawn::OnWaitTargetPosition()
+void AEnemyTurretPawn::OnWaitTargetPosition()
 {
 	GetWorldTimerManager().ClearTimer(FWaitingTargetHandle);
 }
 
-bool AEnemyPawn::TakeDamage(const FDamageData& Data)
+bool AEnemyTurretPawn::TakeDamage(const FDamageData& Data)
 {
 	return Super::TakeDamage(Data);
 
 	// if (!Target) SetTarget(Data.Instigator);
 }
 
-void AEnemyPawn::OnDieEvent()
+void AEnemyTurretPawn::OnDieEvent()
 {
 	Super::OnDieEvent();
 

@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "DestructiveForce/Base/PawnBase.h"
-#include "EnemyPawn.generated.h"
+#include "EnemyTurretPawn.generated.h"
 
 UCLASS()
-class DESTRUCTIVEFORCE_API AEnemyPawn : public APawnBase
+class DESTRUCTIVEFORCE_API AEnemyTurretPawn : public APawnBase
 {
 	GENERATED_BODY()
 
@@ -52,7 +52,7 @@ protected:
 
 	virtual void OnDieEvent() override;
 public:
-	AEnemyPawn();
+	AEnemyTurretPawn();
 
 	virtual void Tick(float DeltaTime) override;
 	virtual bool TakeDamage(const FDamageData& Data) override;
