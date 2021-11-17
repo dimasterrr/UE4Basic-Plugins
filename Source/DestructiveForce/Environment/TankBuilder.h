@@ -20,6 +20,9 @@ private:
 protected:
 	// Settings
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
+	float SpawnMax = 4;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
 	float SpawnTime = 10.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
