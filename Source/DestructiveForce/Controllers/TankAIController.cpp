@@ -55,6 +55,12 @@ void ATankAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollo
 	if (ActiveState == EEnemyState::Patrolling) OnPatrollingFinished();
 }
 
+void ATankAIController::SetState(TEnumAsByte<EEnemyState> NewState)
+{
+	ActiveState = NewState;
+	ApplyState();
+}
+
 void ATankAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);

@@ -26,7 +26,7 @@ protected:
 	AEnemyTankPawn* PossessedPawn;
 
 	UPROPERTY(BlueprintReadWrite, Category="Settings")
-	TEnumAsByte<EEnemyState> ActiveState = EEnemyState::Wait;
+	TEnumAsByte<EEnemyState> ActiveState = EEnemyState::Patrolling;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Settings|Patrol")
 	float WaitDelay = 6.f;
@@ -72,4 +72,6 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
+
+	void SetState(TEnumAsByte<EEnemyState> NewState);
 };
