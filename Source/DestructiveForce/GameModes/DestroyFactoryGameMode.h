@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MainGameModeBase.h"
+#include "DestructiveForce/Base/MainGameModeBase.h"
 #include "DestroyFactoryGameMode.generated.h"
 
 class ATankBuilder;

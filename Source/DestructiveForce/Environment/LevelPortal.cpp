@@ -1,7 +1,7 @@
 ﻿#include "LevelPortal.h"
 
 #include "Components/BoxComponent.h"
-#include "DestructiveForce/Base/DestroyFactoryGameMode.h"
+#include "DestructiveForce/GameModes//DestroyFactoryGameMode.h"
 #include "DestructiveForce/Pawns/PlayerTankPawn.h"
 #include "Kismet/GameplayStatics.h"
 

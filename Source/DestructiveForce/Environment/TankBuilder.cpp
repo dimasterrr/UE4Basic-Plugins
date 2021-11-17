@@ -2,8 +2,8 @@
 
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
-#include "DestructiveForce/Base/DestroyFactoryGameMode.h"
 #include "DestructiveForce/Base/Health/HealthComponent.h"
+#include "DestructiveForce/GameModes//DestroyFactoryGameMode.h"
 #include "DestructiveForce/Controllers/TankAIController.h"
 #include "DestructiveForce/Pawns/EnemyTankPawn.h"
 #include "Kismet/GameplayStatics.h"

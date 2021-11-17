@@ -1,6 +1,6 @@
 #include "DestroyFactoryGameMode.h"
 #include "DestructiveForce/Environment/TankBuilder.h"
-#include "Health/HealthComponent.h"
+#include "DestructiveForce/Base/Health//HealthComponent.h"
 
 void ADestroyFactoryGameMode::Tick(float DeltaTime)
 {
