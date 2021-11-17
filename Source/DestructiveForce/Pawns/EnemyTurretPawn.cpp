@@ -1,5 +1,6 @@
 ﻿#include "EnemyTurretPawn.h"
 
+#include "PlayerTankPawn.h"
 #include "TankPawn.h"
 #include "Components/ArrowComponent.h"
 #include "DestructiveForce/Base/Health/HealthComponent.h"
@@ -44,7 +45,7 @@ void AEnemyTurretPawn::PerformValidateTarget(const float DeltaTime)
 	UKismetSystemLibrary::LineTraceSingle(this, StartPoint, EndPoint, TraceChannel, false, {}, DrawType,
 	                                      HitResult, true, FLinearColor::Red, FLinearColor::Green, 0.f);
 
-	const auto CTarget = Cast<ATankPawn>(HitResult.GetActor());
+	const auto CTarget = Cast<APlayerTankPawn>(HitResult.GetActor());
 	SetTarget(CTarget);
 }
 
