@@ -75,3 +75,13 @@ void APlayerTankPawn::PerformRotate(const float DeltaTime)
 
 	GEngine->AddOnScreenDebugMessage(INDEX_NONE, 0.f, FColor::Red, FString(TEXT("RotateRate: %d"), RotateRate));
 }
+
+bool APlayerTankPawn::TakeDamage(const FDamageData& Data)
+{
+	if (const auto PlayerController = Cast<APlayerController>(GetController()))
+	{
+		PlayerController->PlayerCameraManager->StartCameraShake(DamageCameraShakeTemplate, DamageCameraShakeRate);
+	}
+
+	return Super::TakeDamage(Data);;
+}

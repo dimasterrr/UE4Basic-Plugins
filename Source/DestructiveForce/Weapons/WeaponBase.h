@@ -14,7 +14,6 @@ class DESTRUCTIVEFORCE_API AWeaponBase : public AActor
 
 private:
 	FTimerHandle DelayBetweenTimeHandle;
-	
 	FTimerHandle ReloadFireTimeHandle;
 	FTimerHandle ReloadSpecialFireTimeHandle;
 
@@ -39,6 +38,18 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings|Ammo")
 	bool InfiniteAmmo = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Settings|Effects")
+	UParticleSystem* FireEmitterTemplate;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Settings|Effects")
+	USoundBase* FireSoundTemplate;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Settings|Effects")
+	UParticleSystem* SpecialFireEmitterTemplate;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Settings|Effects")
+	USoundBase* SpecialFireSoundTemplate;
 
 private:
 	void OnFireReload();

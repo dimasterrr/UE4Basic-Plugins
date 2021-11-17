@@ -31,6 +31,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float RotationInterpolationSpeed = .4f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Effects")
+	TSubclassOf<UCameraShakeBase> DamageCameraShakeTemplate;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Effects")
+	float DamageCameraShakeRate;
 
 private:
 	void OnMoveForward(const float Value);
@@ -44,4 +50,6 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual bool TakeDamage(const FDamageData& Data) override;
 };

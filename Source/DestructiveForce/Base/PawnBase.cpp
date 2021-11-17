@@ -8,6 +8,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "DestructiveForce/Weapons/WeaponBase.h"
 #include "Health/HealthComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 APawnBase::APawnBase()
 {
@@ -104,6 +105,9 @@ void APawnBase::OnSwitchWeapon()
 void APawnBase::OnDieEvent()
 {
 	OnFireStop();
+	
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DieEmitterTemplate, GetActorLocation());
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), DieDamagedSoundTemplate, GetActorLocation());
 }
 
 AWeaponBase* APawnBase::GetActiveWeapon() const
@@ -125,6 +129,9 @@ void APawnBase::AddAmmoToWeapon(const TSubclassOf<AWeaponBase>& WeaponClass, con
 
 bool APawnBase::TakeDamage(const FDamageData& Data)
 {
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DamagedEmitterTemplate, Data.HitPoint);
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), DamagedSoundTemplate, GetActorLocation());
+
 	const auto CurrentHealth = HealthComponent->GetHealth();
 	HealthComponent->SetHealth(CurrentHealth - Data.Damage);
 

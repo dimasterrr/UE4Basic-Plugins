@@ -4,6 +4,9 @@
 #include "DestructiveForce/Base/Health/Interfaces/DamageTaker.h"
 #include "DestructiveForce/Base/Score/Interface/Scorable.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMaterialLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AProjectileBase::AProjectileBase()
 {
@@ -16,14 +19,15 @@ AProjectileBase::AProjectileBase()
 
 void AProjectileBase::OnBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
 {
-	// TODO: Add super effects
-
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BounceEmitterTemplate, ImpactResult.Location);
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), BounceSoundTemplate, ImpactResult.Location);
 
 	auto TargetIsDie = false;
 	if (const auto DamageTaker = Cast<IDamageTaker>(ImpactResult.GetActor()))
 	{
 		FDamageData DamageData;
 		DamageData.Damage = Damage;
+		DamageData.HitPoint = FTransform(UKismetMathLibrary::MakeRotFromX(ImpactResult.Normal), ImpactResult.Location);
 		DamageData.Owner = GetOwner();
 		DamageData.Instigator = GetInstigator();
 

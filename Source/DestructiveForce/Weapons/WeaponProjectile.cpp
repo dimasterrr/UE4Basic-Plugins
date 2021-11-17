@@ -14,6 +14,7 @@ void AWeaponProjectile::OnFireEvent()
 {
 	if (!HasAmmo()) return;
 
+	Super::OnFireEvent();
 	OnLaunchProjectile();
 	CurrentAmmoCount--;
 }

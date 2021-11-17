@@ -18,6 +18,7 @@ void AWeaponTrace::OnFireEvent()
 {
 	if (!HasAmmo()) return;
 
+	Super::OnFireEvent();
 	OnLaunchTrace();
 	--CurrentAmmoCount;
 }
@@ -26,6 +27,7 @@ void AWeaponTrace::OnSpecialFireEvent()
 {
 	if (!HasAmmo()) return;
 
+	Super::OnSpecialFireEvent();
 	CurrentSpecialFireCount = MaxSpecialFireCount;
 	GetWorldTimerManager().SetTimer(SpecialFireRateDelay, this, &AWeaponTrace::OnSpecialLaunchTrace, SpecialFireRate,
 									true, 0.f);

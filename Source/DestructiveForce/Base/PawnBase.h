@@ -44,6 +44,18 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Score")
 	int ScoreByDie = 20;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Effects")
+	UParticleSystem* DamagedEmitterTemplate;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Effects")
+	USoundBase* DamagedSoundTemplate;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Effects")
+	UParticleSystem* DieEmitterTemplate;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Effects")
+	USoundBase* DieDamagedSoundTemplate;
 
 protected:
 	virtual void BeginPlay() override;

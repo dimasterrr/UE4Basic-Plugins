@@ -12,6 +12,8 @@ struct FDamageData
 	UPROPERTY()
 	float Damage;
 
+	FTransform HitPoint;
+
 	UPROPERTY()
 	AActor* Owner = nullptr;
 

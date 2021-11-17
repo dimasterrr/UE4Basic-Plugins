@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
 #include "Engine/Engine.h"
+#include "Kismet/GameplayStatics.h"
 
 AWeaponBase::AWeaponBase()
 {
@@ -50,10 +51,15 @@ void AWeaponBase::OnSpecialFireReload()
 
 void AWeaponBase::OnFireEvent()
 {
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), FireEmitterTemplate, SpawnPoint->GetComponentTransform());
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), FireSoundTemplate, SpawnPoint->GetComponentLocation());
 }
 
 void AWeaponBase::OnSpecialFireEvent()
 {
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpecialFireEmitterTemplate,
+	                                         SpawnPoint->GetComponentTransform());
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), SpecialFireSoundTemplate, SpawnPoint->GetComponentLocation());
 }
 
 void AWeaponBase::OnReloadEvent()

@@ -21,6 +21,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings")
 	float Damage = 20.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Settings|Effects")
+	UParticleSystem* BounceEmitterTemplate;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Settings|Effects")
+	USoundBase* BounceSoundTemplate;
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	void OnBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity);
