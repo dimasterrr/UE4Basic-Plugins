@@ -2,13 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "DestructiveForceGameModeBase.generated.h"
+#include "MainGameModeBase.generated.h"
 
 class AProjectileBase;
 class UActorPoolComponent;
 
 UCLASS()
-class DESTRUCTIVEFORCE_API ADestructiveForceGameModeBase : public AGameModeBase
+class DESTRUCTIVEFORCE_API AMainGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
@@ -20,7 +20,7 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	ADestructiveForceGameModeBase();
+	AMainGameModeBase();
 
 	UFUNCTION(BlueprintPure)
 	UActorPoolComponent* GetProjectilePool() const;

@@ -1,7 +1,7 @@
 ﻿#include "WeaponProjectile.h"
 
 #include "Components/ArrowComponent.h"
-#include "DestructiveForce/DestructiveForceGameModeBase.h"
+#include "DestructiveForce/Base/MainGameModeBase.h"
 #include "DestructiveForce/Base/ActorPool/ActorPoolComponent.h"
 #include "DestructiveForce/Projectiles/ProjectileBase.h"
 
@@ -29,7 +29,7 @@ void AWeaponProjectile::OnSpecialFireEvent()
 
 void AWeaponProjectile::OnLaunchProjectile()
 {
-	const auto GameMode = Cast<ADestructiveForceGameModeBase>(GetWorld()->GetAuthGameMode());
+	const auto GameMode = Cast<AMainGameModeBase>(GetWorld()->GetAuthGameMode());
 	if (!GameMode) return;
 
 	const auto ProjectilePool = GameMode->GetProjectilePool();

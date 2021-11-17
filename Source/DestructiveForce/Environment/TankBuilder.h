@@ -74,4 +74,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void OnDie();
+
+	UFUNCTION()
+	UHealthComponent* GetHealthComponent() const;
 };

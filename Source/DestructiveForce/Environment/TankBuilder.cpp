@@ -2,6 +2,7 @@
 
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
+#include "DestructiveForce/Base/DestroyFactoryGameMode.h"
 #include "DestructiveForce/Base/Health/HealthComponent.h"
 #include "DestructiveForce/Controllers/TankAIController.h"
 #include "DestructiveForce/Pawns/EnemyTankPawn.h"
@@ -31,6 +32,11 @@ ATankBuilder::ATankBuilder()
 void ATankBuilder::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (const auto GameMode = Cast<ADestroyFactoryGameMode>(GetWorld()->GetAuthGameMode()))
+	{
+		GameMode->RegisterBuilder(this);
+	}
 
 	GetWorldTimerManager().SetTimer(FSpawnTimerHandle, this, &ATankBuilder::OnSpawnActor, SpawnTime, true, 0.f);
 }
@@ -73,4 +79,9 @@ bool ATankBuilder::TakeDamage(const FDamageData& Data)
 void ATankBuilder::OnDie_Implementation()
 {
 	GetWorldTimerManager().ClearTimer(FSpawnTimerHandle);
+}
+
+UHealthComponent* ATankBuilder::GetHealthComponent() const
+{
+	return HealthComponent;
 }
