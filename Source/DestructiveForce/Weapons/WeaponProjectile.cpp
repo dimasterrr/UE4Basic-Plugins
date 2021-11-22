@@ -4,10 +4,37 @@
 #include "DestructiveForce/Base/MainGameModeBase.h"
 #include "DestructiveForce/Base/ActorPool/ActorPoolComponent.h"
 #include "DestructiveForce/Projectiles/ProjectileBase.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AWeaponProjectile::AWeaponProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
+}
+
+void AWeaponProjectile::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	PerformProjectilePath(DeltaTime);
+}
+
+void AWeaponProjectile::PerformProjectilePath(float DeltaTime)
+{
+	if (!UsePredictsProjectilePathParams && DefaultProjectileClass != nullptr) return;
+
+	const auto DefaultProjectile = DefaultProjectileClass.GetDefaultObject();
+	const auto DefaultProjectileMovement = DefaultProjectile->GetProjectileMovementComponent();
+
+	PredictsProjectilePathParams.StartLocation = SpawnPoint->GetComponentLocation();
+	PredictsProjectilePathParams.LaunchVelocity = SpawnPoint->GetForwardVector() *
+		DefaultProjectileMovement->InitialSpeed;
+	PredictsProjectilePathParams.OverrideGravityZ = GetWorld()->GetWorldSettings()->GetGravityZ() *
+		DefaultProjectileMovement->ProjectileGravityScale;
+	PredictsProjectilePathParams.ProjectileRadius = DefaultProjectile->GetSimpleCollisionRadius();
+
+	FPredictProjectilePathResult PredictResult;
+	UGameplayStatics::PredictProjectilePath(this, PredictsProjectilePathParams, PredictResult);
 }
 
 void AWeaponProjectile::OnFireEvent()

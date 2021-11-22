@@ -29,10 +29,15 @@ protected:
 
 protected:
 	UFUNCTION(BlueprintCallable)
-	void OnBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity);
+	virtual void OnBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity);
+
+	void ApplyDamage(const FHitResult& ImpactResult, bool& TargetIsDie) const;
+	void ApplyScore(const FHitResult& ImpactResult) const;
 
 public:
 	AProjectileBase();
+
+	UProjectileMovementComponent* GetProjectileMovementComponent() const;
 
 protected:
 	virtual void OnActivated() override;

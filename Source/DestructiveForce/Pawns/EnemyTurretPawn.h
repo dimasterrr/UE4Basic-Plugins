@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Settings|Targetting")
 	TEnumAsByte<ETraceTypeQuery> TraceChannel;
 
+	UPROPERTY(EditDefaultsOnly, Category="Settings|Targetting")
+	float TargetingDistance = 500.f;
+
 	UPROPERTY(EditDefaultsOnly, Category="Settings|Targetting|Debug")
 	bool bDrawTargetTraceVisible = false;
 

@@ -17,29 +17,43 @@ AProjectileBase::AProjectileBase()
 	ProjectileMovementComponent->OnProjectileBounce.AddDynamic(this, &AProjectileBase::OnBounce);
 }
 
+UProjectileMovementComponent* AProjectileBase::GetProjectileMovementComponent() const
+{
+	return ProjectileMovementComponent;
+}
+
+void AProjectileBase::ApplyDamage(const FHitResult& ImpactResult, bool& TargetIsDie) const
+{
+	const auto DamageTaker = Cast<IDamageTaker>(ImpactResult.GetActor());
+	if (!DamageTaker) return;
+
+	FDamageData DamageData;
+	DamageData.Damage = Damage;
+	DamageData.HitPoint = FTransform(UKismetMathLibrary::MakeRotFromX(ImpactResult.Normal), ImpactResult.Location);
+	DamageData.Owner = GetOwner();
+	DamageData.Instigator = GetInstigator();
+
+	TargetIsDie = DamageTaker->TakeDamage(DamageData);
+}
+
+void AProjectileBase::ApplyScore(const FHitResult& ImpactResult) const
+{
+	if (const auto Scorable = Cast<IScorable>(ImpactResult.GetActor()))
+	{
+		const auto PlayerState = GetInstigator()->GetPlayerState<AGlobalPlayerState>();
+		if (PlayerState) PlayerState->AddScores(Scorable->GetDieScore());
+	}
+}
+
 void AProjectileBase::OnBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
 {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BounceEmitterTemplate, ImpactResult.Location);
 	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), BounceSoundTemplate, ImpactResult.Location);
 
 	auto TargetIsDie = false;
-	if (const auto DamageTaker = Cast<IDamageTaker>(ImpactResult.GetActor()))
-	{
-		FDamageData DamageData;
-		DamageData.Damage = Damage;
-		DamageData.HitPoint = FTransform(UKismetMathLibrary::MakeRotFromX(ImpactResult.Normal), ImpactResult.Location);
-		DamageData.Owner = GetOwner();
-		DamageData.Instigator = GetInstigator();
-
-		TargetIsDie = DamageTaker->TakeDamage(DamageData);
-	}
-
-	if (const auto Scorable = Cast<IScorable>(ImpactResult.GetActor()))
-	{
-		const auto PlayerState = GetInstigator()->GetPlayerState<AGlobalPlayerState>();
-		if (PlayerState && TargetIsDie)
-			PlayerState->AddScores(Scorable->GetDieScore());
-	}
+	ApplyDamage(ImpactResult, TargetIsDie);
+	
+	if (TargetIsDie) ApplyScore(ImpactResult);
 
 	Release();
 }

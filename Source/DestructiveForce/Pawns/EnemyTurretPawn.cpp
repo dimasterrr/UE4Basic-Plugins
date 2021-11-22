@@ -37,7 +37,7 @@ void AEnemyTurretPawn::PerformValidateTarget(const float DeltaTime)
 	const auto CurrentWeapon = GetActiveWeapon();
 	const auto StartPoint = CurrentWeapon->GetActorLocation();
 	const auto StartPointForward = CurrentWeapon->GetActorForwardVector();
-	const auto EndPoint = StartPoint + StartPointForward * 500.f;
+	const auto EndPoint = StartPoint + StartPointForward * TargetingDistance;
 
 	const auto DrawType = bDrawTargetTraceVisible ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None;
 
