@@ -93,6 +93,9 @@ public:
 	void OnSwitchWeapon();
 
 	UFUNCTION(BlueprintCallable)
+	bool IsDie() const;
+	
+	UFUNCTION(BlueprintCallable)
 	virtual void OnDieEvent();
 
 	virtual bool TakeDamage(const FDamageData& Data) override;

@@ -102,6 +102,11 @@ void APawnBase::OnSwitchWeapon()
 	EquipWeaponIndex = (EquipWeaponIndex + 1) % FMath::Min(EquipWeapons.Num(), MaxEquipWeapons);
 }
 
+bool APawnBase::IsDie() const
+{
+	return HealthComponent->IsDie();
+}
+
 void APawnBase::OnDieEvent()
 {
 	OnFireStop();

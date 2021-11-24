@@ -83,5 +83,17 @@ bool APlayerTankPawn::TakeDamage(const FDamageData& Data)
 		PlayerController->PlayerCameraManager->StartCameraShake(DamageCameraShakeTemplate, DamageCameraShakeRate);
 	}
 
-	return Super::TakeDamage(Data);;
+	return Super::TakeDamage(Data);
+}
+
+void APlayerTankPawn::OnDieEvent()
+{
+	Super::OnDieEvent();
+	
+	FloatingPawnMovement->StopActiveMovement();
+
+	const auto PlayerController = GetWorld()->GetFirstPlayerController();
+	PlayerController->StopMovement();
+
+	OnDieUi();
 }

@@ -46,7 +46,7 @@ void AEnemyTurretPawn::PerformValidateTarget(const float DeltaTime)
 	                                      HitResult, true, FLinearColor::Red, FLinearColor::Green, 0.f);
 
 	const auto CTarget = Cast<APlayerTankPawn>(HitResult.GetActor());
-	SetTarget(CTarget);
+	SetTarget(CTarget && !CTarget->IsDie() ? CTarget : nullptr);
 }
 
 void AEnemyTurretPawn::PerformRotateToTarget(const float DeltaTime) const

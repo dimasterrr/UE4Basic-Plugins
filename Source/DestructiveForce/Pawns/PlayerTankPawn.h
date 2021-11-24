@@ -52,4 +52,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual bool TakeDamage(const FDamageData& Data) override;
+	virtual void OnDieEvent() override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDieUi();
 };
