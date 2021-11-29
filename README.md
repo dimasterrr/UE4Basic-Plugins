@@ -17,3 +17,12 @@
 ![Main Menu Create Widget](.readme/UI_MainMenuCreateWidget.png)
 ###### Demo
 [![Demo](https://i9.ytimg.com/vi_webp/sqPlruyaDQA/mqdefault.webp?v=61a529d4&sqp=CIzSlI0G&rs=AOn4CLABfZMlRFTVn02YCXgvVl1fX310qA)](https://youtu.be/sqPlruyaDQA)
+##### Other Widget
+> Взял из другого своего проекта (задание **) UE5 правда...
+
+##### Struct
+![Other Widget Struct](.readme/UI_OtherWidgetStruct.png)
+##### Generate Content
+![Other Widget Generate Content](.readme/UI_OtherWidgetGenerateContent.png)
+##### Generate Actions
+![Other Widget Generate Actions](.readme/UI_OtherWidgetGenerateActions.png)
