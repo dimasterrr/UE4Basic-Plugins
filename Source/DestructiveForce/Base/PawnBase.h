@@ -6,6 +6,7 @@
 #include "Score/Interface/Scorable.h"
 #include "PawnBase.generated.h"
 
+class UWidgetComponent;
 class AWeaponBase;
 class UBoxComponent;
 class UArrowComponent;
@@ -29,6 +30,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UHealthComponent* HealthComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UWidgetComponent* HealthWidgetComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Settings|Weapon")
 	TSubclassOf<AWeaponBase> DefaultWeaponClass;
@@ -97,6 +101,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	virtual void OnDieEvent();
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void OnHealthChanged(const float OldHealth, const float NewHealth);
 
 	virtual bool TakeDamage(const FDamageData& Data) override;
 

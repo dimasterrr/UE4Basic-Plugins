@@ -4,6 +4,8 @@
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
+#include "DestructiveForce/UI/PawnHealthBarWidget.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DestructiveForce/Weapons/WeaponBase.h"
@@ -22,8 +24,14 @@ APawnBase::APawnBase()
 	WeaponSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Weapon Point"));
 	WeaponSetupPoint->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform);
 
+	HealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("HealthWidgetComponent");
+	HealthWidgetComponent->SetupAttachment(RootComponent);
+	HealthWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	HealthWidgetComponent->SetWidgetClass(UPawnHealthBarWidget::StaticClass());
+
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 	HealthComponent->OnDieDelegate.AddUObject(this, &APawnBase::OnDieEvent);
+	HealthComponent->OnHealthChangedDelegate.AddUObject(this, &APawnBase::OnHealthChanged);
 }
 
 void APawnBase::Destroyed()
@@ -110,9 +118,17 @@ bool APawnBase::IsDie() const
 void APawnBase::OnDieEvent()
 {
 	OnFireStop();
-	
+
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DieEmitterTemplate, GetActorLocation());
 	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), DieDamagedSoundTemplate, GetActorLocation());
+}
+
+void APawnBase::OnHealthChanged(const float OldHealth, const float NewHealth)
+{
+	if (const auto Widget = Cast<UPawnHealthBarWidget>(HealthWidgetComponent->GetUserWidgetObject()))
+	{
+		Widget->SetHealth(NewHealth);
+	}
 }
 
 AWeaponBase* APawnBase::GetActiveWeapon() const
