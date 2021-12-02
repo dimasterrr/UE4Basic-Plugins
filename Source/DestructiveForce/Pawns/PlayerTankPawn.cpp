@@ -1,7 +1,9 @@
 ﻿#include "PlayerTankPawn.h"
 
 #include "CoreMinimal.h"
+#include "Blueprint/UserWidget.h"
 #include "Camera/CameraComponent.h"
+#include "DestructiveForce/Base/PlayerHUD.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "DestructiveForce/Weapons/WeaponBase.h"
 
@@ -89,11 +91,35 @@ bool APlayerTankPawn::TakeDamage(const FDamageData& Data)
 void APlayerTankPawn::OnDieEvent()
 {
 	Super::OnDieEvent();
-	
+
 	FloatingPawnMovement->StopActiveMovement();
 
 	const auto PlayerController = GetWorld()->GetFirstPlayerController();
 	PlayerController->StopMovement();
 
+	if (const auto PlayerHud = Cast<APlayerHUD>(PlayerController->GetHUD()))
+	{
+		const auto Widget = PlayerHud->ShowWidget(EWidgetID::GameOver, 10);
+
+		FInputModeUIOnly Mode;
+		Mode.SetWidgetToFocus(Widget->TakeWidget());
+		Mode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+		PlayerController->SetInputMode(Mode);
+		PlayerController->SetShowMouseCursor(true);
+	}
+
 	OnDieUi();
+}
+
+void APlayerTankPawn::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (const auto PlayerController = Cast<APlayerController>(NewController))
+	{
+		if (const auto Hud = Cast<APlayerHUD>(PlayerController->GetHUD()))
+		{
+			Hud->ShowWidget(EWidgetID::PlayerScreen, 0);
+		}
+	}
 }

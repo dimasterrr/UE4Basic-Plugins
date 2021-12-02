@@ -16,6 +16,7 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 void ATankPlayerController::PerformMousePosition(const float DeltaSeconds)
 {
 	if (!PossessedPawn) return;
+	if (PossessedPawn->IsDie()) return;
 
 	FVector MousePosition, MouseDirection;
 	DeprojectMousePositionToWorld(MousePosition, MouseDirection);
@@ -27,7 +28,7 @@ void ATankPlayerController::PerformMousePosition(const float DeltaSeconds)
 
 	auto CurrentMousePosition = MousePosition + Direction * 1000.f;
 	CurrentMousePosition.Z = PawnPosition.Z;
-	
+
 	const auto CurrentLocation = PossessedPawn->GetActorLocation();
 	const auto CurrentTurretRotation = PossessedPawn->GetActorRotation(); // TODO: Rotation turret
 

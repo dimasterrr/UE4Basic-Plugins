@@ -4,6 +4,7 @@
 #include "Animation/UMGSequencePlayer.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 void UMainMenuWidget::NativeConstruct()
@@ -48,8 +49,8 @@ void UMainMenuWidget::NativeConstruct()
 void UMainMenuWidget::OnNewGameButtonClicked()
 {
 	if (IsActionsLocker) return;
-
-	// TODO: Add Open level
+	
+	UGameplayStatics::OpenLevel(this, *NewLevel.GetAssetName());
 }
 
 void UMainMenuWidget::OnSettingsButtonClicked()

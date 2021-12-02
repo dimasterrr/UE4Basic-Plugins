@@ -16,9 +16,9 @@ void UHealthComponent::SetHealth(const float NewHealth)
 
 	const auto OldHealth = Health;
 	Health = FMath::Clamp(NewHealth, 0.f, MaxHealth);
+	OnHealthChangedDelegate.Broadcast(OldHealth, NewHealth);
 
 	if (IsDie()) OnDieDelegate.Broadcast();
-	else OnHealthChangedDelegate.Broadcast(OldHealth, NewHealth);
 }
 
 bool UHealthComponent::IsDie() const

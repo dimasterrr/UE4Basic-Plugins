@@ -40,6 +40,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidgetAnim), Transient)
 	UWidgetAnimation* HideWidgetAnimation;
 
+	// Options	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
+	TSoftObjectPtr<UWorld> NewLevel;
+
 private:
 	UFUNCTION(BlueprintCallable)
 	void OnShowWidgetAnimationFinished();

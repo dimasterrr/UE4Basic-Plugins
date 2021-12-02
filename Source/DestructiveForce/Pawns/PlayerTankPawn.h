@@ -56,4 +56,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDieUi();
+
+	virtual void PossessedBy(AController* NewController) override;
 };
