@@ -4,6 +4,8 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenuSettingsWidget.generated.h"
 
+class URadioButtonGroup;
+class UNativeWidgetHost;
 class UButton;
 
 UCLASS()
@@ -16,6 +18,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UButton* BackButton;
 
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	URadioButtonGroup* RadioButtonGroupSettings;
+
 public:
 	UPROPERTY()
 	FBackButtonClicked BackButtonClicked;
@@ -25,4 +30,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void OnBackButtonClicked();
+
+	UFUNCTION(BlueprintCallable)
+	void OnRadioButtonGroupChanged(const int32 NewSelectedIndex);
 };
