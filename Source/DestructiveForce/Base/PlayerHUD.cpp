@@ -1,10 +1,24 @@
 ﻿#include "PlayerHUD.h"
 
 #include "Blueprint/UserWidget.h"
+#include "DestructiveForce/UI/PlayerScreenWidget.h"
+#include "DestructiveForce/UI/Components/MinimapWidget.h"
 
 APlayerHUD::APlayerHUD()
 {
 	PrimaryActorTick.bCanEverTick = true;
+}
+
+void APlayerHUD::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (const auto PlayerScreen = GetCurrentWidget<UPlayerScreenWidget>())
+	{
+		const auto PlayerPosition = GetOwningPawn()->GetActorLocation();
+		const auto PlayerPosition2D = FVector2D(PlayerPosition.X, PlayerPosition.Y);
+		PlayerScreen->GetMinimap()->UpdatePlayerPosition(PlayerPosition2D);
+	}
 }
 
 void APlayerHUD::BeginPlay()

@@ -120,6 +120,7 @@ void APlayerTankPawn::PossessedBy(AController* NewController)
 		if (const auto Hud = Cast<APlayerHUD>(PlayerController->GetHUD()))
 		{
 			Hud->ShowWidget(EWidgetID::PlayerScreen, 0);
+			
 		}
 	}
 }

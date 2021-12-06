@@ -6,3 +6,8 @@ void UPlayerScreenWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 }
+
+UMinimapWidget* UPlayerScreenWidget::GetMinimap() const
+{
+	return PlayerMinimap;
+}

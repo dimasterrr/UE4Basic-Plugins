@@ -26,7 +26,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	EWidgetID CurrentWidgetID;
-
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -35,6 +35,8 @@ protected:
 
 public:
 	APlayerHUD();
+
+	virtual void Tick(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintCallable)
 	UUserWidget* ShowWidget(EWidgetID WidgetID, const int32 ZOrder = 0);
