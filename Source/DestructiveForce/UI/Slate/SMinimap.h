@@ -7,7 +7,8 @@
 class DESTRUCTIVEFORCE_API SMinimap : public SCompoundWidget
 {
 protected:
-	const FMinimapStyle* MinimapStyle = nullptr;
+	const FSlateBrush* BackgroundBrush = nullptr;
+	const FSlateBrush* PlayerBrush = nullptr;
 
 	FVector2D PlayerPosition;
 

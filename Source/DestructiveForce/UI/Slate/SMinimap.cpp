@@ -6,7 +6,8 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void SMinimap::Construct(const FArguments& InArgs)
 {
-	MinimapStyle = InArgs._Style;
+	BackgroundBrush = &InArgs._Style->BackgroundBrush;
+	PlayerBrush = &InArgs._Style->PlayerBrush;
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
@@ -30,7 +31,7 @@ int32 SMinimap::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometr
 			OutDrawElements,
 			LayerId,
 			AllottedGeometry.ToPaintGeometry(ScaledMinimapSize, FSlateLayoutTransform()),
-			&MinimapStyle->BackgroundBrush,
+			BackgroundBrush,
 			DrawEffects
 		);
 	}
@@ -53,7 +54,7 @@ int32 SMinimap::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometr
 			OutDrawElements,
 			LayerId,
 			AllottedGeometry.ToPaintGeometry(PlayerIconSize, PlayerIconTransform),
-			&MinimapStyle->PlayerBrush,
+			PlayerBrush,
 			DrawEffects
 		);
 	}

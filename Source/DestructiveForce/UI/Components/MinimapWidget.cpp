@@ -2,7 +2,8 @@
 
 TSharedRef<SWidget> UMinimapWidget::RebuildWidget()
 {
-	Minimap = SNew(SMinimap);
+	Minimap = SNew(SMinimap)
+		.Style(&WidgetStyle);
 	return Minimap.ToSharedRef();
 }
 
