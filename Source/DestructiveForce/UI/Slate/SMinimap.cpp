@@ -6,8 +6,7 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void SMinimap::Construct(const FArguments& InArgs)
 {
-	MinimapBackgroundTexture = InArgs._MinimapBackgroundTexture;
-	PlayerIconTexture = InArgs._PlayerIconTexture;
+	MinimapStyle = InArgs._Style;
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
@@ -23,11 +22,7 @@ int32 SMinimap::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometr
 	// Base settings
 
 	// Draw Minimap Background
-	if (MinimapBackgroundTexture)
 	{
-		FSlateBrush MinimapBrushBase;
-		MinimapBrushBase.SetResourceObject(MinimapBackgroundTexture);
-
 		const auto bIsEnabled = ShouldBeEnabled(bParentEnabled);
 		const auto DrawEffects = bIsEnabled ? ESlateDrawEffect::None : ESlateDrawEffect::DisabledEffect;
 
@@ -35,7 +30,7 @@ int32 SMinimap::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometr
 			OutDrawElements,
 			LayerId,
 			AllottedGeometry.ToPaintGeometry(ScaledMinimapSize, FSlateLayoutTransform()),
-			&MinimapBrushBase,
+			&MinimapStyle->BackgroundBrush,
 			DrawEffects
 		);
 	}
@@ -44,11 +39,7 @@ int32 SMinimap::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometr
 	++LayerId; // Move To NextLayer
 
 	// Draw Player Icon
-	if (PlayerIconTexture)
 	{
-		FSlateBrush PlayerIconBrushBase;
-		PlayerIconBrushBase.SetResourceObject(PlayerIconTexture);
-
 		constexpr auto PlayerIconScale = 1.f;
 		const auto PlayerIconSize = FVector2D(50.f);
 		const auto PlayerIconCenter = PlayerIconSize * 0.5f;
@@ -62,7 +53,7 @@ int32 SMinimap::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometr
 			OutDrawElements,
 			LayerId,
 			AllottedGeometry.ToPaintGeometry(PlayerIconSize, PlayerIconTransform),
-			&PlayerIconBrushBase,
+			&MinimapStyle->PlayerBrush,
 			DrawEffects
 		);
 	}
@@ -70,12 +61,6 @@ int32 SMinimap::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometr
 
 	return SCompoundWidget::OnPaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle,
 	                                bParentEnabled);
-}
-
-void SMinimap::SetupTextures(const UTexture2D* InMinimapBackgroundTexture, const UTexture2D* InPlayerIconTexture)
-{
-	MinimapBackgroundTexture = const_cast<UTexture2D*>(InMinimapBackgroundTexture);
-	PlayerIconTexture = const_cast<UTexture2D*>(InPlayerIconTexture);
 }
 
 void SMinimap::UpdatePlayerPosition(const FVector2D& InPosition)

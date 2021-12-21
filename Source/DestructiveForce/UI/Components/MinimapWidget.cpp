@@ -15,11 +15,6 @@ void UMinimapWidget::ReleaseSlateResources(bool bReleaseChildren)
 void UMinimapWidget::SynchronizeProperties()
 {
 	Super::SynchronizeProperties();
-
-	if (Minimap.IsValid())
-	{
-		Minimap->SetupTextures(MinimapBackgroundTexture, PlayerIconTexture);
-	}
 }
 
 void UMinimapWidget::UpdatePlayerPosition(const FVector2D& InPosition)

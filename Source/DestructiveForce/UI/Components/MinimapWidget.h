@@ -13,13 +13,6 @@ class DESTRUCTIVEFORCE_API UMinimapWidget : public UWidget
 protected:
 	TSharedPtr<SMinimap> Minimap;
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
-	UTexture2D* MinimapBackgroundTexture;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
-	UTexture2D* PlayerIconTexture;
-
 protected:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 
