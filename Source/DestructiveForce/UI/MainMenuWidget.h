@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "GeneralWidgetStyle.h"
 #include "Blueprint/UserWidget.h"
 #include "MainMenuWidget.generated.h"
 
@@ -43,6 +44,13 @@ protected:
 	// Options	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Settings")
 	TSoftObjectPtr<UWorld> NewLevel;
+
+	// Style
+	UPROPERTY(EditAnywhere, Category = "Appearance")
+	FName GeneralStylePresetName = FName("GeneralDefault");
+	
+	UPROPERTY(EditAnywhere, Category = "Appearance")
+	FGeneralStyle GeneralStyle;
 
 private:
 	UFUNCTION(BlueprintCallable)

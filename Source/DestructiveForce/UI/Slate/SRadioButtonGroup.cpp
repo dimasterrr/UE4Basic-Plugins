@@ -1,11 +1,14 @@
 ﻿#include "SRadioButtonGroup.h"
 
 #include "SlateOptMacros.h"
+#include "Style/RadioButtonGroupWidgetStyle.h"
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void SRadioButtonGroup::Construct(const FArguments& InArgs)
 {
+	SetRadioButtonGroupWidgetStyle(InArgs._Style);
+
 	OnRadioButtonChanged = InArgs._OnRadioButtonChanged;
 
 	ChildSlot
@@ -31,9 +34,11 @@ TSharedRef<SWidget> SRadioButtonGroup::CreateCheckbox(const int32 InIndex, const
 	return SNew(SCheckBox)
 	.IsChecked_Raw(this, &SRadioButtonGroup::IsChecked, InIndex)
 	.OnCheckStateChanged_Raw(this, &SRadioButtonGroup::OnCheckboxStateChanged, InIndex)
+	.Style(CheckBoxStyle)
 	[
 		SNew(STextBlock)
 		.Text(FText::FromString(InText))
+		.TextStyle(TextBlockStyle)
 	];
 }
 
@@ -48,6 +53,12 @@ void SRadioButtonGroup::OnCheckboxStateChanged(const ECheckBoxState NewState, co
 
 	CurrentIndex = InIndex;
 	OnRadioButtonChanged.ExecuteIfBound(CurrentIndex);
+}
+
+void SRadioButtonGroup::SetRadioButtonGroupWidgetStyle(const FRadioButtonGroupStyle* InStyle)
+{
+	CheckBoxStyle = &InStyle->CheckBoxStyle;
+	TextBlockStyle = &InStyle->TextBlockStyle;
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

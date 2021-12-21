@@ -1,5 +1,6 @@
 ﻿#include "MainMenuWidget.h"
 
+#include "GeneralStyleSet.h"
 #include "MainMenuSettingsWidget.h"
 #include "Animation/UMGSequencePlayer.h"
 #include "Components/Button.h"
@@ -10,19 +11,23 @@
 void UMainMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	GeneralStyle = FGeneralStyleSet::Get().GetWidgetStyle<FGeneralStyle>(GeneralStylePresetName);
 
 	if (NewGameButton)
 	{
+		NewGameButton->SetStyle(GeneralStyle.ButtonStyle);
 		NewGameButton->OnPressed.AddDynamic(this, &UMainMenuWidget::OnNewGameButtonClicked);
 	}
 
 	if (SettingsButton)
 	{
+		SettingsButton->SetStyle(GeneralStyle.ButtonStyle);
 		SettingsButton->OnPressed.AddDynamic(this, &UMainMenuWidget::OnSettingsButtonClicked);
 	}
 
 	if (ExitButton)
 	{
+		ExitButton->SetStyle(GeneralStyle.ButtonStyle);
 		ExitButton->OnPressed.AddDynamic(this, &UMainMenuWidget::OnExitButtonClicked);
 	}
 
@@ -49,7 +54,7 @@ void UMainMenuWidget::NativeConstruct()
 void UMainMenuWidget::OnNewGameButtonClicked()
 {
 	if (IsActionsLocker) return;
-	
+
 	UGameplayStatics::OpenLevel(this, *NewLevel.GetAssetName());
 }
 

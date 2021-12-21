@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/Widget.h"
+#include "RadioButtonGroupWidgetStyle.h"
 #include "RadioButtonGroup.generated.h"
 
 class SRadioButtonGroup;
@@ -18,6 +19,9 @@ private:
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnRadioButtonGroupChanged OnRadioButtonGroupChanged;
+
+	UPROPERTY(EditAnywhere, Category = "Appearance", meta = (DisplayName = "Style"))
+	FRadioButtonGroupStyle WidgetStyle;
 
 private:
 	void OnOnRadioButtonGroupChanged(const int32 NewSelectedIndex);

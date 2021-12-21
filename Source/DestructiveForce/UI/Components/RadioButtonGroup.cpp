@@ -1,10 +1,10 @@
 ﻿#include "RadioButtonGroup.h"
-
 #include "DestructiveForce/UI/Slate/SRadioButtonGroup.h"
 
 TSharedRef<SWidget> URadioButtonGroup::RebuildWidget()
 {
 	RadioButtonGroup = SNew(SRadioButtonGroup)
+		.Style(&WidgetStyle)
 		.OnRadioButtonChanged_UObject(this, &URadioButtonGroup::OnOnRadioButtonGroupChanged);
 
 	return RadioButtonGroup.ToSharedRef();

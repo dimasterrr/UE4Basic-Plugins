@@ -8,6 +8,14 @@ public class DestructiveForce : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
+		PublicIncludePaths.AddRange(new string[]
+		{
+			"DestructiveForce",
+			"DestructiveForce/Ui",
+			"DestructiveForce/Ui/Slate",
+			"DestructiveForce/Ui/Slate/Style",
+		});
+
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
 			"Core",

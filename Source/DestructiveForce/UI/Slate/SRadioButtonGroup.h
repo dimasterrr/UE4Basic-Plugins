@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Chaos/AABB.h"
-#include "Chaos/AABB.h"
 #include "Widgets/SCompoundWidget.h"
+
+struct FRadioButtonGroupStyle;
 
 class DESTRUCTIVEFORCE_API SRadioButtonGroup : public SCompoundWidget
 {
@@ -19,6 +19,10 @@ private:
 
 	void OnCheckboxStateChanged(const ECheckBoxState NewState, const int32 InIndex);
 
+protected:
+	const FCheckBoxStyle* CheckBoxStyle = nullptr;
+	const FTextBlockStyle* TextBlockStyle = nullptr;
+
 public:
 	FOnRadioButtonChanged OnRadioButtonChanged;
 
@@ -30,8 +34,11 @@ public:
 
 		SLATE_EVENT(FOnRadioButtonChanged, OnRadioButtonChanged)
 
+		SLATE_STYLE_ARGUMENT(FRadioButtonGroupStyle, Style)
+
 	SLATE_END_ARGS()
 
-
 	void Construct(const FArguments& InArgs);
+
+	void SetRadioButtonGroupWidgetStyle(const FRadioButtonGroupStyle* InStyle);
 };
