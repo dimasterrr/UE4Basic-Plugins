@@ -36,3 +36,17 @@
 ![Radio Button Group](.readme/UI_RadioButtonGroup.png)
 ###### Minimap* (Youtube link)
 [![Minimap](https://i9.ytimg.com/vi/PKsmjGNSUx8/mq3.jpg?sqp=CMjluY0G&rs=AOn4CLBgmrD1SPBUTLUuiNvoi-yTfOwVlg&retry=4)](https://youtu.be/PKsmjGNSUx8)
+
+### Lesson05
+##### UMG Style
+![UMG General Style](.readme/UI_GeneralStyle.png)
+##### Switch two style set
+![Styles Presets](.readme/UI_GeneralStylesPresset.png)
+###### MainMenuWidget
+![MainMenuWidget Demo](.readme/UI_MainMenuWidgetDemo.png)
+![MainMenuWidget Style](.readme/UI_MainMenuWidgetStyle.png)
+###### MainMenuSettingsWidget
+![MainMenuSettingsWidget Demo](.readme/UI_MainMenuSettingsWidgetDemo.png)
+![MainMenuSettingsWidget Style](.readme/UI_MainMenuSettingsWidgetStyle.png)
+##### Update style for minimap (*)
+![Minimap Style](.readme/UI_MinimapStyle.png)
