@@ -30,23 +30,6 @@ void APlayerTankPawn::Tick(float DeltaTime)
 	PerformRotate(DeltaTime);
 }
 
-void APlayerTankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerTankPawn::OnMoveForward);
-	PlayerInputComponent->BindAxis("TurnRight", this, &APlayerTankPawn::OnTurnRight);
-
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APlayerTankPawn::OnFireStart);
-	PlayerInputComponent->BindAction("Fire", IE_Released, this, &APlayerTankPawn::OnFireStop);
-
-	PlayerInputComponent->BindAction("FireSpecial", IE_Pressed, this, &APlayerTankPawn::OnFireSpecialStart);
-	PlayerInputComponent->BindAction("FireSpecial", IE_Released, this, &APlayerTankPawn::OnFireSpecialStop);
-
-	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &APlayerTankPawn::OnReload);
-	PlayerInputComponent->BindAction("SwitchWeapon", IE_Pressed, this, &APlayerTankPawn::OnSwitchWeapon);
-}
-
 void APlayerTankPawn::OnMoveForward(const float Value)
 {
 	ActiveForwardAxis = Value;

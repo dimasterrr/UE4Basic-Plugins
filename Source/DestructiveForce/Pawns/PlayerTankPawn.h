@@ -39,9 +39,6 @@ protected:
 	float DamageCameraShakeRate;
 
 private:
-	void OnMoveForward(const float Value);
-	void OnTurnRight(const float Value);
-
 	void PerformMove(float DeltaTime);
 	void PerformRotate(float DeltaTime);
 
@@ -49,7 +46,8 @@ public:
 	APlayerTankPawn();
 
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void OnMoveForward(const float Value);
+	void OnTurnRight(const float Value);
 
 	virtual bool TakeDamage(const FDamageData& Data) override;
 	virtual void OnDieEvent() override;

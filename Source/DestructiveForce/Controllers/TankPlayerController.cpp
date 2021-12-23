@@ -43,5 +43,65 @@ void ATankPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	PossessedPawn = Cast<ATankPawn>(InPawn);
+	PossessedPawn = Cast<APlayerTankPawn>(InPawn);
+}
+
+void ATankPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	if (!InputComponent) return;
+
+	InputComponent->BindAxis("MoveForward", this, &ATankPlayerController::OnMoveForward);
+	InputComponent->BindAxis("TurnRight", this, &ATankPlayerController::OnTurnRight);
+
+	InputComponent->BindAction("Fire", IE_Pressed, this, &ATankPlayerController::OnFireStart);
+	InputComponent->BindAction("Fire", IE_Released, this, &ATankPlayerController::OnFireStop);
+
+	InputComponent->BindAction("FireSpecial", IE_Pressed, this, &ATankPlayerController::OnFireSpecialStart);
+	InputComponent->BindAction("FireSpecial", IE_Released, this, &ATankPlayerController::OnFireSpecialStop);
+
+	InputComponent->BindAction("Reload", IE_Pressed, this, &ATankPlayerController::OnReload);
+	InputComponent->BindAction("SwitchWeapon", IE_Pressed, this, &ATankPlayerController::OnSwitchWeapon);
+}
+
+void ATankPlayerController::OnMoveForward(float Value)
+{
+	PossessedPawn->OnMoveForward(Value);
+}
+
+void ATankPlayerController::OnTurnRight(float Value)
+{
+	PossessedPawn->OnTurnRight(Value);
+}
+
+void ATankPlayerController::OnFireStart()
+{
+	PossessedPawn->OnFireStart();
+}
+
+void ATankPlayerController::OnFireStop()
+{
+	PossessedPawn->OnFireStop();
+	OnLeftMouseButtonUp.Broadcast();
+}
+
+void ATankPlayerController::OnFireSpecialStart()
+{
+	PossessedPawn->OnFireSpecialStart();
+}
+
+void ATankPlayerController::OnFireSpecialStop()
+{
+	PossessedPawn->OnFireSpecialStop();
+}
+
+void ATankPlayerController::OnReload()
+{
+	PossessedPawn->OnReload();
+}
+
+void ATankPlayerController::OnSwitchWeapon()
+{
+	PossessedPawn->OnSwitchWeapon();
 }

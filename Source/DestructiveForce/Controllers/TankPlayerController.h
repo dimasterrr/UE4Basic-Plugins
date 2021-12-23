@@ -12,13 +12,43 @@ class DESTRUCTIVEFORCE_API ATankPlayerController : public APlayerController
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category="Develope")
-	ATankPawn* PossessedPawn = nullptr;
+	APlayerTankPawn* PossessedPawn = nullptr;
+
+public:
+	FSimpleMulticastDelegate OnLeftMouseButtonUp;
 
 private:
 	void PerformMousePosition(const float DeltaSeconds);
 
+
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void SetupInputComponent() override;
+
+	// Input events moved from pawn
+	UFUNCTION()
+	void OnMoveForward(float Value);
+	
+	UFUNCTION()
+	void OnTurnRight(float Value);
+	
+	UFUNCTION()
+	void OnFireStart();
+	
+	UFUNCTION()
+	void OnFireStop();
+	
+	UFUNCTION()
+	void OnFireSpecialStart();
+	
+	UFUNCTION()
+	void OnFireSpecialStop();
+	
+	UFUNCTION()
+	void OnReload();
+	
+	UFUNCTION()
+	void OnSwitchWeapon();
 
 public:
 	ATankPlayerController();
