@@ -16,7 +16,7 @@
 ###### Create MM Widget
 ![Main Menu Create Widget](.readme/UI_MainMenuCreateWidget.png)
 ###### Demo
-[![Demo](https://i9.ytimg.com/vi_webp/sqPlruyaDQA/mqdefault.webp?v=61a529d4&sqp=CIzSlI0G&rs=AOn4CLABfZMlRFTVn02YCXgvVl1fX310qA)](https://youtu.be/sqPlruyaDQA)
+[![Demo](.readme/YouTubePreview.png)](https://youtu.be/sqPlruyaDQA)
 ##### Other Widget
 > Взял из другого своего проекта (задание **) UE5 правда...
 
@@ -35,7 +35,7 @@
 ##### Radio Button Group
 ![Radio Button Group](.readme/UI_RadioButtonGroup.png)
 ###### Minimap* (Youtube link)
-[![Minimap](https://i9.ytimg.com/vi/PKsmjGNSUx8/mq3.jpg?sqp=CMjluY0G&rs=AOn4CLBgmrD1SPBUTLUuiNvoi-yTfOwVlg&retry=4)](https://youtu.be/PKsmjGNSUx8)
+[![Minimap](.readme/YouTubePreview.png)](https://youtu.be/PKsmjGNSUx8)
 
 ### Lesson05
 ##### UMG Style
@@ -50,3 +50,7 @@
 ![MainMenuSettingsWidget Style](.readme/UI_MainMenuSettingsWidgetStyle.png)
 ##### Update style for minimap (*)
 ![Minimap Style](.readme/UI_MinimapStyle.png)
+
+### Lesson06
+##### Drag&Drop widget + Tooltip + ActorSpawner (Youtube Link)
+[![Drag&Drop Tooltip ActorSpawner](.readme/YouTubePreview.png)](https://youtu.be/Qf1CflFtlsQ)
