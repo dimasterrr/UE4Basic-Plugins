@@ -1,5 +1,9 @@
 ﻿#include "TankPlayerController.h"
+
+#include "Base/PlayerHUD.h"
+#include "Inventory/InventoryWidget.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Modules/Inventory/Components/InventoryManagerComponent.h"
 
 ATankPlayerController::ATankPlayerController()
 {
@@ -63,6 +67,8 @@ void ATankPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Reload", IE_Pressed, this, &ATankPlayerController::OnReload);
 	InputComponent->BindAction("SwitchWeapon", IE_Pressed, this, &ATankPlayerController::OnSwitchWeapon);
+
+	InputComponent->BindAction("OpenInventory", IE_Pressed, this, &ATankPlayerController::OnInventoryClicked);
 }
 
 void ATankPlayerController::OnMoveForward(float Value)
@@ -104,4 +110,25 @@ void ATankPlayerController::OnReload()
 void ATankPlayerController::OnSwitchWeapon()
 {
 	PossessedPawn->OnSwitchWeapon();
+}
+
+void ATankPlayerController::OnInventoryClicked()
+{
+	const auto Hud = Cast<APlayerHUD>(GetHUD());
+	if (!Hud) return;
+
+	const auto WidgetRaw = Hud->ShowWidget(EWidgetID::Inventory, 10);
+	const auto Widget = Cast<UInventoryWidget>(WidgetRaw);
+	if (!Widget) return;
+
+	const auto InventoryManager = PossessedPawn->GetInventoryManager();
+	if (!InventoryManager) return;
+
+	InventoryManager->PrepareWidget(Widget);
+
+	// Set input mode to UI
+	FInputModeUIOnly Property;
+	Property.SetWidgetToFocus(Widget->TakeWidget());
+	Property.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+	SetInputMode(Property);
 }

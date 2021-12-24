@@ -8,6 +8,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UInventoryComponent;
+class UInventoryManagerComponent;
 
 UCLASS()
 class DESTRUCTIVEFORCE_API APlayerTankPawn : public ATankPawn
@@ -26,15 +28,21 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* Camera;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UInventoryComponent* InventoryComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UInventoryManagerComponent* InventoryManagerComponent;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float RotationSpeed = 100.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float RotationInterpolationSpeed = .4f;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Effects")
 	TSubclassOf<UCameraShakeBase> DamageCameraShakeTemplate;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Effects")
 	float DamageCameraShakeRate;
 
@@ -42,9 +50,11 @@ private:
 	void PerformMove(float DeltaTime);
 	void PerformRotate(float DeltaTime);
 
+protected:
+	virtual void BeginPlay() override;
+
 public:
 	APlayerTankPawn();
-
 	virtual void Tick(float DeltaTime) override;
 	void OnMoveForward(const float Value);
 	void OnTurnRight(const float Value);
@@ -56,4 +66,6 @@ public:
 	void OnDieUi();
 
 	virtual void PossessedBy(AController* NewController) override;
+
+	UInventoryManagerComponent* GetInventoryManager();
 };

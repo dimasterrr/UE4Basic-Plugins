@@ -50,6 +50,9 @@ protected:
 	UFUNCTION()
 	void OnSwitchWeapon();
 
+	UFUNCTION()
+	void OnInventoryClicked();
+
 public:
 	ATankPlayerController();
 	virtual void Tick(float DeltaSeconds) override;

@@ -6,6 +6,8 @@
 #include "DestructiveForce/Base/PlayerHUD.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "DestructiveForce/Weapons/WeaponBase.h"
+#include "Modules/Inventory/Components/InventoryComponent.h"
+#include "Modules/Inventory/Components/InventoryManagerComponent.h"
 
 APlayerTankPawn::APlayerTankPawn()
 {
@@ -20,6 +22,17 @@ APlayerTankPawn::APlayerTankPawn()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory Component"));
+	
+	InventoryManagerComponent = CreateDefaultSubobject<UInventoryManagerComponent>(TEXT("Inventory Manager Component"));
+}
+
+void APlayerTankPawn::BeginPlay()
+{
+	Super::BeginPlay();
+
+	InventoryManagerComponent->Init(InventoryComponent);
 }
 
 void APlayerTankPawn::Tick(float DeltaTime)
@@ -103,7 +116,11 @@ void APlayerTankPawn::PossessedBy(AController* NewController)
 		if (const auto Hud = Cast<APlayerHUD>(PlayerController->GetHUD()))
 		{
 			Hud->ShowWidget(EWidgetID::PlayerScreen, 0);
-			
 		}
 	}
+}
+
+UInventoryManagerComponent* APlayerTankPawn::GetInventoryManager()
+{
+	return InventoryManagerComponent;
 }
