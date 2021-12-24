@@ -8,6 +8,7 @@
 UENUM()
 enum class EItemType : uint8
 {
+	None,
 	Miscellaneous,
 	Currency,
 	Equipment,
@@ -25,7 +26,7 @@ enum class EItemRarity : uint8
 	Immortal
 };
 
-// DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemDrop, class UInventoryCellWidget* /*from*/, class UInventoryCellWidget* /*to*/)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemDrop, class UInventoryCellWidget* /*From*/, class UInventoryCellWidget* /*To*/)
 
 USTRUCT(BlueprintType)
 struct DESTRUCTIVEFORCE_API FInventoryItemInfo : public FTableRowBase
@@ -34,7 +35,7 @@ struct DESTRUCTIVEFORCE_API FInventoryItemInfo : public FTableRowBase
 
 	// General
 	UPROPERTY(EditDefaultsOnly, Category="General")
-	FName Id;
+	FName Id = NAME_None;
 
 	UPROPERTY(EditDefaultsOnly, Category="General")
 	FText Name;
@@ -63,8 +64,11 @@ struct DESTRUCTIVEFORCE_API FInventorySlotInfo : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FName Id;
+	FName Id = NAME_None;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int32 Count;
+	int32 Count = INDEX_NONE;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	EItemType Type = EItemType::None;
 };

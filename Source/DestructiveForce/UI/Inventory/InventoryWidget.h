@@ -15,32 +15,38 @@ class DESTRUCTIVEFORCE_API UInventoryWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(meta=(BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
 	UUniformGridPanel* ItemsGridPanel;
 
-	UPROPERTY(meta=(BindWidgetOptional))
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
 	UInventoryCellWidget* MoneyCellWidget;
-
-	UPROPERTY(EditDefaultsOnly)
-	int32 RowSize = 5;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UInventoryCellWidget> CellWidgetClass;
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<UInventoryCellWidget*> CellWidgets;
 
-protected:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UInventoryCellWidget> CellWidgetClass;
 
-	UInventoryCellWidget* CreateCellWidget();
+	UPROPERTY(EditDefaultsOnly)
+	int32 RowSize = 5;
 
 public:
-	void Init(int32 ItemSize);
+	FOnItemDrop OnItemDrop;
+
+protected:
+	UInventoryCellWidget* CreateCellWidget();
+
+	void OnItemDropEvent(UInventoryCellWidget* From, UInventoryCellWidget* To);
 
 	UFUNCTION(BlueprintCallable)
-	bool AddItem(const FInventorySlotInfo& SlotInfo, const FInventoryItemInfo& ItemInfo, int32 SlotPosition = -1);
+	void SetFilterByType(const TEnumAsByte<EItemType> Type);
+	
+public:
+	UFUNCTION(BlueprintCallable)
+	void Init(int32 GridSizeCount);
+
+	UFUNCTION(BlueprintCallable)
+	bool AddItem(const FInventorySlotInfo& SlotInfo, const FInventoryItemInfo& ItemInfo, int32 SlotPosition);
 
 	UFUNCTION(BlueprintCallable)
 	bool AddCurrencySlot(const FInventorySlotInfo& SlotInfo, const FInventoryItemInfo& ItemInfo);

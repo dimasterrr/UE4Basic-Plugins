@@ -28,11 +28,13 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* Camera;
 
+	// #START: Inventory
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UInventoryComponent* InventoryComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UInventoryManagerComponent* InventoryManagerComponent;
+	// #END: Inventor
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float RotationSpeed = 100.f;
@@ -52,7 +54,7 @@ private:
 
 protected:
 	virtual void BeginPlay() override;
-
+	
 public:
 	APlayerTankPawn();
 	virtual void Tick(float DeltaTime) override;

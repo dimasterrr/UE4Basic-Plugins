@@ -32,6 +32,7 @@ void APlayerTankPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InventoryComponent->Init();
 	InventoryManagerComponent->Init(InventoryComponent);
 }
 

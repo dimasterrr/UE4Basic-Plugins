@@ -5,9 +5,10 @@
 #include "Engine/DataTable.h"
 #include "InventoryManagerComponent.generated.h"
 
+class UInventoryCellWidget;
+struct FInventoryItemInfo;
 class UInventoryWidget;
 class UInventoryComponent;
-struct FInventoryItemInfo;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class DESTRUCTIVEFORCE_API UInventoryManagerComponent : public UActorComponent
@@ -27,12 +28,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	int32 MinSize = 20;
 
+protected:
+	void OnItemDropEvent(UInventoryCellWidget* From, UInventoryCellWidget* To);
+
 public:
-	UInventoryManagerComponent();
-
 	void Init(UInventoryComponent* InventoryComponent);
-
-	FInventoryItemInfo* GetItemData(const FName Id) const;
-
 	void PrepareWidget(UInventoryWidget* Widget);
+
+	const FInventoryItemInfo* GetItemData(const FName& Id) const;
 };

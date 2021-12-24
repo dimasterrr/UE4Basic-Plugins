@@ -3,36 +3,45 @@
 #include "InventoryComponent.h"
 #include "Inventory/InventoryWidget.h"
 #include "Blueprint/UserWidget.h"
-
-UInventoryManagerComponent::UInventoryManagerComponent()
-{
-}
+#include "Inventory/InventoryCellWidget.h"
 
 void UInventoryManagerComponent::Init(UInventoryComponent* InventoryComponent)
 {
 	SelfInventoryComponent = InventoryComponent;
-	if (!SelfInventoryComponent || !InventoryItemsData) return;
-}
-
-FInventoryItemInfo* UInventoryManagerComponent::GetItemData(const FName Id) const
-{
-	return InventoryItemsData ? InventoryItemsData->FindRow<FInventoryItemInfo>(Id, "") : nullptr;
 }
 
 void UInventoryManagerComponent::PrepareWidget(UInventoryWidget* Widget)
 {
-	if (!Widget) return;
+	if (!SelfInventoryComponent || !InventoryItemsData || !Widget) return;
 	SelfInventoryWidget = Widget;
-	
-	const auto InventoryMinSize = FMath::Max(SelfInventoryComponent->GetItemsNum(), MinSize);
-	Widget->Init(InventoryMinSize);
-	
+	SelfInventoryWidget->Init(FMath::Max(SelfInventoryComponent->GetItemsNum(), MinSize));
+	SelfInventoryWidget->OnItemDrop.AddUObject(this, &UInventoryManagerComponent::OnItemDropEvent);
+
 	for (auto& Item : SelfInventoryComponent->GetItems())
 	{
 		const auto ItemData = GetItemData(Item.Value.Id);
 		if (!ItemData) continue;
-	
-		ItemData->Icon.LoadSynchronous();
+
 		SelfInventoryWidget->AddItem(Item.Value, *ItemData, Item.Key);
+	}
+}
+
+const FInventoryItemInfo* UInventoryManagerComponent::GetItemData(const FName& Id) const
+{
+	return InventoryItemsData ? InventoryItemsData->FindRow<FInventoryItemInfo>(Id, "") : nullptr;
+}
+
+void UInventoryManagerComponent::OnItemDropEvent(UInventoryCellWidget* From, UInventoryCellWidget* To)
+{
+	const auto FromItem = From->GetItem();
+	const auto ToItem = To->GetItem();
+
+	From->Erase();
+	To->Erase();
+
+	To->AddItem(FromItem, *GetItemData(FromItem.Id));
+	if (ToItem.Id != NAME_None)
+	{
+		From->AddItem(ToItem, *GetItemData(ToItem.Id));
 	}
 }

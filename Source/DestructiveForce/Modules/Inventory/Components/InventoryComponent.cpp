@@ -1,24 +1,40 @@
 ﻿#include "InventoryComponent.h"
 
-FInventorySlotInfo* UInventoryComponent::GetItem(int32 SlotIndex)
+void UInventoryComponent::Init()
+{
+	if (BaseInventorySet)
+	{
+		TArray<FInventorySlotInfo*> Slots;
+		BaseInventorySet->GetAllRows<FInventorySlotInfo>("", Slots);
+
+		for (auto i = 0; i < Slots.Num(); ++i)
+		{
+			UpsertItem(i, *Slots[i]);
+		}
+	}
+}
+
+void UInventoryComponent::SetupBaseInventorySet(UDataTable* InventorySet)
+{
+	BaseInventorySet = InventorySet;
+	RemoveAll();
+	Init();
+}
+
+FInventorySlotInfo* UInventoryComponent::GetItem(const int32 SlotIndex)
 {
 	return Items.Find(SlotIndex);
 }
 
-void UInventoryComponent::SetItem(int32 SlotIndex, const FInventorySlotInfo& Item)
+void UInventoryComponent::UpsertItem(const int32 SlotIndex, const FInventorySlotInfo& Item)
 {
-	ClearItem(SlotIndex);
+	RemoveItem(SlotIndex);
 	Items.Add(SlotIndex, Item);
 }
 
-void UInventoryComponent::ClearItem(int32 SlotIndex)
+void UInventoryComponent::RemoveItem(const int32 SlotIndex)
 {
 	Items.Remove(SlotIndex);
-}
-
-void UInventoryComponent::CLearAll()
-{
-	Items.Empty();
 }
 
 const TMap<int32, FInventorySlotInfo>& UInventoryComponent::GetItems() const
@@ -29,4 +45,9 @@ const TMap<int32, FInventorySlotInfo>& UInventoryComponent::GetItems() const
 int32 UInventoryComponent::GetItemsNum() const
 {
 	return Items.Num();
+}
+
+void UInventoryComponent::RemoveAll()
+{
+	Items.Empty();
 }

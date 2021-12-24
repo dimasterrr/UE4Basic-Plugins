@@ -13,17 +13,36 @@ class DESTRUCTIVEFORCE_API UInventoryCellWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-private:
+protected:
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
+	UImage* ItemIconImage;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
+	UTextBlock* ItemCountTextBlock;
+
+	UPROPERTY(EditDefaultsOnly)
+	bool CanDrag = true;
+
+	UPROPERTY(BlueprintReadOnly)
 	int32 IndexInInventory = INDEX_NONE;
+
+	UPROPERTY(BlueprintReadOnly)
 	bool HasItem;
+
+	UPROPERTY(BlueprintReadOnly)
 	FInventorySlotInfo StoredItem;
 
 protected:
-	UPROPERTY(meta=(BindWidgetOptional))
-	UImage* ItemIconImage;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
-	UPROPERTY(meta=(BindWidgetOptional))
-	UTextBlock* CountTextBlock;
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent,
+
+	                                  UDragDropOperation*& OutOperation) override;
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,
+	                          UDragDropOperation* InOperation) override;
+
+public:
+	FOnItemDrop OnItemDrop;
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -31,7 +50,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool AddItem(const FInventorySlotInfo& SlotInfo, const FInventoryItemInfo& ItemInfo);
-
+	
 	UFUNCTION(BlueprintCallable)
 	void Erase();
 
@@ -44,4 +63,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	int32 GetIndexInInventory() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetSlotVisible(bool Value);
 };

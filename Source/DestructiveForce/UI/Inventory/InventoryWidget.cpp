@@ -1,39 +1,36 @@
 ﻿#include "InventoryWidget.h"
 
 #include "InventoryCellWidget.h"
-#include "Components/TextBlock.h"
 #include "Components/UniformGridPanel.h"
-
-void UInventoryWidget::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-}
-
-void UInventoryWidget::NativeConstruct()
-{
-	Super::NativeConstruct();
-}
 
 UInventoryCellWidget* UInventoryWidget::CreateCellWidget()
 {
 	if (!CellWidgetClass) return nullptr;
 
 	const auto CellWidget = CreateWidget<UInventoryCellWidget>(this, CellWidgetClass);
+	CellWidget->OnItemDrop.AddUObject(this, &UInventoryWidget::OnItemDropEvent);
 	CellWidgets.Add(CellWidget);
 
 	return CellWidget;
 }
 
-void UInventoryWidget::Init(int32 ItemSize)
+void UInventoryWidget::OnItemDropEvent(UInventoryCellWidget* From, UInventoryCellWidget* To)
+{
+	if (!OnItemDrop.IsBound()) return;
+	OnItemDrop.Broadcast(From, To);
+}
+
+void UInventoryWidget::Init(const int32 GridSizeCount)
 {
 	if (!ItemsGridPanel) return;
-
 	ItemsGridPanel->ClearChildren();
-	for (auto i = 0; i < ItemSize; ++i)
+
+	for (auto i = 0; i < GridSizeCount; ++i)
 	{
 		const auto CellWidget = CreateCellWidget();
-		CellWidget->SetInventorySlotIndex(i);
+		if (!CellWidget) continue;
 
+		CellWidget->SetInventorySlotIndex(i);
 		ItemsGridPanel->AddChildToUniformGrid(CellWidget, i / RowSize, i % RowSize);
 	}
 }
@@ -44,13 +41,13 @@ bool UInventoryWidget::AddItem(const FInventorySlotInfo& SlotInfo, const FInvent
 	if (ItemInfo.Type == EItemType::Currency) return AddCurrencySlot(SlotInfo, ItemInfo);
 	if (!ItemsGridPanel) return false;
 
-	const auto FindPredicate = [SlotPosition](UInventoryCellWidget* Widget)
+	const auto FindPredicate = [SlotPosition](UInventoryCellWidget* Widget) -> bool
 	{
 		return Widget && Widget->GetIndexInInventory() == SlotPosition;
 	};
 
 	UInventoryCellWidget* WidgetToAddItem = nullptr;
-	const auto WidgetToAddItemPtr = CellWidgets.FindByPredicate(FindPredicate);
+	UInventoryCellWidget** WidgetToAddItemPtr = CellWidgets.FindByPredicate(FindPredicate);
 
 	if (WidgetToAddItemPtr)
 	{
@@ -76,4 +73,18 @@ bool UInventoryWidget::AddCurrencySlot(const FInventorySlotInfo& SlotInfo, const
 	if (!MoneyCellWidget) return false;
 
 	return MoneyCellWidget->AddItem(SlotInfo, ItemInfo);
+}
+
+// Simple filter
+void UInventoryWidget::SetFilterByType(const TEnumAsByte<EItemType> Type)
+{
+	if (!ItemsGridPanel) return;
+
+	for (const auto Widget : CellWidgets)
+	{
+		if (Widget->IsEmpty()) continue;
+
+		const auto SlotType = Widget->GetItem().Type;
+		Widget->SetSlotVisible(Type == SlotType || Type == EItemType::None);
+	}
 }
