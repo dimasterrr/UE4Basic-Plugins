@@ -54,3 +54,12 @@
 ### Lesson06
 ##### Drag&Drop widget + Tooltip + ActorSpawner (Youtube Link)
 [![Drag&Drop Tooltip ActorSpawner](.readme/YouTubePreview.png)](https://youtu.be/Qf1CflFtlsQ)
+
+### Lesson 07
+##### Inventory Base + Drag&Drop + Filer (Youtube Link)
+[![Inventory Base + Drag&Drop + Filer](.readme/YouTubePreview.png)](https://youtu.be/57EeBNVPvOQ)
+##### Inventory Presets
+![Inventory Presets#1](.readme/UI_InventoryPressets.png)
+![Inventory Presets#2](.readme/UI_InventoryComponentSet.png)
+##### Inventory File Items (Import/Export from context menu in UE)
+![Inventory File Items](.readme/UI_InventoryFileItems.png)
