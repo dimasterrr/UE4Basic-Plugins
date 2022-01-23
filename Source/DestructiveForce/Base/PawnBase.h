@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Health/Interfaces/DamageTaker.h"
+#include "Modules/Inventory/Components/EquipInterface.h"
 #include "Score/Interface/Scorable.h"
 #include "PawnBase.generated.h"
 
@@ -14,7 +15,7 @@ class UStaticMeshComponent;
 class UHealthComponent;
 
 UCLASS()
-class DESTRUCTIVEFORCE_API APawnBase : public APawn, public IDamageTaker, public IScorable
+class DESTRUCTIVEFORCE_API APawnBase : public APawn, public IDamageTaker, public IScorable, public IEquipInterface
 {
 	GENERATED_BODY()
 

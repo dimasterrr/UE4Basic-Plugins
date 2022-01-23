@@ -129,3 +129,46 @@ UInventoryManagerComponent* APlayerTankPawn::GetInventoryManager()
 {
 	return InventoryManagerComponent;
 }
+
+void APlayerTankPawn::EquipItem(EItemEquipSlot Slot, FName ItemID)
+{
+	const auto Component = GetEquipComponent(Slot);
+	if (!Component) return;
+
+	const auto ItemInfo = InventoryManagerComponent->GetItemData(ItemID);
+	Component->SetStaticMesh(ItemInfo->Mesh.LoadSynchronous());
+	Component->SetHiddenInGame(false);
+
+	// Add advanced stats
+}
+
+void APlayerTankPawn::UnEquipItem(EItemEquipSlot Slot, FName ItemID)
+{
+	const auto Component = GetEquipComponent(Slot);
+	if (!Component) return;
+
+	Component->SetStaticMesh(nullptr);
+	Component->SetHiddenInGame(false);
+
+	// Remove advanced stats
+}
+
+UStaticMeshComponent* APlayerTankPawn::GetEquipComponent(EItemEquipSlot Slot)
+{
+	FName EquipTag = "";
+
+	switch (Slot)
+	{
+	case EItemEquipSlot::Weapon: EquipTag = "Equip_Weapon";
+		break;
+	case EItemEquipSlot::Wheels: EquipTag = "Equip_Wheels";
+		break;
+	case EItemEquipSlot::Armor: EquipTag = "Equip_Armor";
+		break;
+	case EItemEquipSlot::None: break;
+	default: return nullptr;
+	}
+
+	auto Components = GetComponentsByTag(UStaticMeshComponent::StaticClass(), EquipTag);
+	return Components.Num() > 0 ? Cast<UStaticMeshComponent>(Components[0]) : nullptr;
+}

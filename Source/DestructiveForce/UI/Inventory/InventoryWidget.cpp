@@ -68,7 +68,6 @@ bool UInventoryWidget::AddItem(const FInventorySlotInfo& SlotInfo, const FInvent
                                int32 SlotPosition)
 {
 	if (ItemInfo.Type == EItemType::Currency) return AddCurrencySlot(SlotInfo, ItemInfo);
-	if (!ItemsGridPanel) return false;
 
 	const auto FindPredicate = [SlotPosition](UInventoryCellWidget* Widget) -> bool
 	{

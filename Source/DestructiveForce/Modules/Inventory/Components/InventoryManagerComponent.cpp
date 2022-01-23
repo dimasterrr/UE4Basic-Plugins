@@ -37,6 +37,14 @@ void UInventoryManagerComponent::PrepareInventoryWidget(UInventoryMainWidget* Wi
 
 		LocalInventory->AddItem(Item.Value, *ItemData, Item.Key);
 	}
+
+	for (auto& Item : SelfInventoryEquipComponent->GetItems())
+	{
+		const auto ItemData = GetItemData(Item.Value.Id);
+		if (!ItemData) continue;
+
+		LocalEquipment->AddItem(Item.Value, *ItemData, Item.Key);
+	}
 }
 
 const FInventoryItemInfo* UInventoryManagerComponent::GetItemData(const FName& Id) const
@@ -61,11 +69,11 @@ void UInventoryManagerComponent::OnItemDropEvent(UInventoryCellWidget* From, UIn
 
 	auto ToItem = To->GetItem();
 	const auto ToItemData = GetItemData(ToItem.Id);
-	
+
 	if (To->IsEmpty())
 	{
 		ToItem = FromItem;
-		
+
 		//////////////
 		ToItem.Count = ToInventoryComponent->GetMaxItemAmount(To->GetIndexInInventory(), *FromItemData);
 
@@ -74,7 +82,7 @@ void UInventoryManagerComponent::OnItemDropEvent(UInventoryCellWidget* From, UIn
 
 		FromItem.Count -= ToItem.Count;
 		//////////////
-		
+
 		From->Erase();
 		if (FromItem.Count)
 		{
@@ -92,9 +100,12 @@ void UInventoryManagerComponent::OnItemDropEvent(UInventoryCellWidget* From, UIn
 	}
 	else
 	{
+		ToItem.Count = ToInventoryComponent->GetMaxItemAmount(To->GetIndexInInventory(), *FromItemData);
+		if (ToItem.Count == 0) return;
+
 		From->Erase();
 		From->AddItem(ToItem, *ToItemData);
-		
+
 		To->Erase();
 		To->AddItem(FromItem, *FromItemData);
 	}

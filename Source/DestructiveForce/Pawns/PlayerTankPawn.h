@@ -56,6 +56,8 @@ private:
 	void PerformMove(float DeltaTime);
 	void PerformRotate(float DeltaTime);
 
+	UStaticMeshComponent* GetEquipComponent(EItemEquipSlot Slot);
+	
 protected:
 	virtual void BeginPlay() override;
 	
@@ -74,4 +76,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	UInventoryManagerComponent* GetInventoryManager();
+
+	virtual void EquipItem(EItemEquipSlot Slot, FName ItemID) override;
+	virtual void UnEquipItem(EItemEquipSlot Slot, FName ItemID) override;
 };
