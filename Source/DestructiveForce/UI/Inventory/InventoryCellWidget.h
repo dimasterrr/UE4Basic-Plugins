@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "InventoryWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Modules/Inventory/InventoryItem.h"
 #include "InventoryCellWidget.generated.h"
@@ -23,7 +24,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	bool CanDrag = true;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditAnywhere)
 	int32 IndexInInventory = INDEX_NONE;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -31,6 +32,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	FInventorySlotInfo StoredItem;
+
+	UPROPERTY(BlueprintReadOnly)
+	UInventoryWidget* ParentWidget;
 
 protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
@@ -50,7 +54,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool AddItem(const FInventorySlotInfo& SlotInfo, const FInventoryItemInfo& ItemInfo);
-	
+
 	UFUNCTION(BlueprintCallable)
 	void Erase();
 
@@ -66,4 +70,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetSlotVisible(bool Value);
+
+	UFUNCTION()
+	void SetParentWidget(UInventoryWidget* InventoryWidget);
+
+	UFUNCTION()
+	UInventoryWidget* GetParentWidget() const;
 };

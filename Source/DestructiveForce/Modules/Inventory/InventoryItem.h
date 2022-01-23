@@ -26,6 +26,16 @@ enum class EItemRarity : uint8
 	Immortal
 };
 
+
+UENUM()
+enum class EItemEquipSlot : uint8
+{
+	None,
+	Armor,
+	Weapon,
+	Wheels
+};
+
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemDrop, class UInventoryCellWidget* /*From*/, class UInventoryCellWidget* /*To*/)
 
 USTRUCT(BlueprintType)
@@ -49,6 +59,9 @@ struct DESTRUCTIVEFORCE_API FInventoryItemInfo : public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, Category="Type")
 	EItemRarity Rarity;
+
+	UPROPERTY(EditDefaultsOnly, Category="Type")
+	EItemEquipSlot EquipSlot;
 
 	// View
 	UPROPERTY(EditDefaultsOnly, Category="View")

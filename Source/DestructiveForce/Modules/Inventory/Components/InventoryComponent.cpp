@@ -37,6 +37,12 @@ void UInventoryComponent::RemoveItem(const int32 SlotIndex)
 	Items.Remove(SlotIndex);
 }
 
+int32 UInventoryComponent::GetMaxItemAmount(int32 SlotIndex, const FInventoryItemInfo& Item) const
+{
+	const auto Info = Items.Find(SlotIndex);
+	return Info && Info->Id == Item.Id ? 0 : -1;
+}
+
 const TMap<int32, FInventorySlotInfo>& UInventoryComponent::GetItems() const
 {
 	return Items;

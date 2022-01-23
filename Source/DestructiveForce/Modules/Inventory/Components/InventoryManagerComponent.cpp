@@ -4,25 +4,38 @@
 #include "Inventory/InventoryWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Inventory/InventoryCellWidget.h"
+#include "Inventory/InventoryMainWidget.h"
 
-void UInventoryManagerComponent::Init(UInventoryComponent* InventoryComponent)
+void UInventoryManagerComponent::SetBaseInventory(UInventoryComponent* InventoryComponent)
 {
 	SelfInventoryComponent = InventoryComponent;
 }
 
-void UInventoryManagerComponent::PrepareWidget(UInventoryWidget* Widget)
+void UInventoryManagerComponent::SetBaseEquipment(UInventoryComponent* InventoryComponent)
 {
-	if (!SelfInventoryComponent || !InventoryItemsData || !Widget) return;
+	SelfInventoryEquipComponent = InventoryComponent;
+}
+
+void UInventoryManagerComponent::PrepareInventoryWidget(UInventoryMainWidget* Widget)
+{
+	if (!SelfInventoryComponent || !SelfInventoryEquipComponent || !InventoryItemsData || !Widget) return;
 	SelfInventoryWidget = Widget;
-	SelfInventoryWidget->Init(FMath::Max(SelfInventoryComponent->GetItemsNum(), MinSize));
-	SelfInventoryWidget->OnItemDrop.AddUObject(this, &UInventoryManagerComponent::OnItemDropEvent);
+
+	const auto LocalInventory = SelfInventoryWidget->GetInventoryWidget();
+	LocalInventory->Init(FMath::Max(SelfInventoryComponent->GetItemsNum(), MinSize));
+	LocalInventory->SetRepresentedInventory(SelfInventoryComponent);
+	LocalInventory->OnItemDrop.AddUObject(this, &UInventoryManagerComponent::OnItemDropEvent);
+
+	const auto LocalEquipment = SelfInventoryWidget->GetEquipmentWidget();
+	LocalEquipment->SetRepresentedInventory(SelfInventoryEquipComponent);
+	LocalEquipment->OnItemDrop.AddUObject(this, &UInventoryManagerComponent::OnItemDropEvent);
 
 	for (auto& Item : SelfInventoryComponent->GetItems())
 	{
 		const auto ItemData = GetItemData(Item.Value.Id);
 		if (!ItemData) continue;
 
-		SelfInventoryWidget->AddItem(Item.Value, *ItemData, Item.Key);
+		LocalInventory->AddItem(Item.Value, *ItemData, Item.Key);
 	}
 }
 
@@ -33,15 +46,56 @@ const FInventoryItemInfo* UInventoryManagerComponent::GetItemData(const FName& I
 
 void UInventoryManagerComponent::OnItemDropEvent(UInventoryCellWidget* From, UInventoryCellWidget* To)
 {
-	const auto FromItem = From->GetItem();
-	const auto ToItem = To->GetItem();
+	if (!From || !To) return;
 
-	From->Erase();
-	To->Erase();
+	const auto FromInventoryWidget = From->GetParentWidget();
+	const auto ToInventoryWidget = To->GetParentWidget();
+	if (!FromInventoryWidget || !ToInventoryWidget) return;
 
-	To->AddItem(FromItem, *GetItemData(FromItem.Id));
-	if (ToItem.Id != NAME_None)
+	const auto FromInventoryComponent = FromInventoryWidget->GetRepresentedInventory();
+	const auto ToInventoryComponent = ToInventoryWidget->GetRepresentedInventory();
+	if (!FromInventoryComponent || !ToInventoryComponent) return;
+
+	auto FromItem = From->GetItem();
+	const auto FromItemData = GetItemData(FromItem.Id);
+
+	auto ToItem = To->GetItem();
+	const auto ToItemData = GetItemData(ToItem.Id);
+	
+	if (To->IsEmpty())
 	{
-		From->AddItem(ToItem, *GetItemData(ToItem.Id));
+		ToItem = FromItem;
+		
+		//////////////
+		ToItem.Count = ToInventoryComponent->GetMaxItemAmount(To->GetIndexInInventory(), *FromItemData);
+
+		if (ToItem.Count == 0) return;
+		if (ToItem.Count == -1) ToItem.Count = FromItem.Count;
+
+		FromItem.Count -= ToItem.Count;
+		//////////////
+		
+		From->Erase();
+		if (FromItem.Count)
+		{
+			From->AddItem(FromItem, *FromItemData);
+			FromInventoryComponent->UpsertItem(From->GetIndexInInventory(), FromItem);
+		}
+		else
+		{
+			FromInventoryComponent->RemoveItem(From->GetIndexInInventory());
+		}
+
+		To->Erase();
+		To->AddItem(ToItem, *FromItemData);
+		ToInventoryComponent->UpsertItem(To->GetIndexInInventory(), ToItem);
+	}
+	else
+	{
+		From->Erase();
+		From->AddItem(ToItem, *ToItemData);
+		
+		To->Erase();
+		To->AddItem(FromItem, *FromItemData);
 	}
 }

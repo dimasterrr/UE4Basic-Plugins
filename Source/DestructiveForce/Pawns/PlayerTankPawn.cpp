@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "DestructiveForce/Weapons/WeaponBase.h"
 #include "Modules/Inventory/Components/InventoryComponent.h"
+#include "Modules/Inventory/Components/InventoryEquipComponent.h"
 #include "Modules/Inventory/Components/InventoryManagerComponent.h"
 
 APlayerTankPawn::APlayerTankPawn()
@@ -24,7 +25,7 @@ APlayerTankPawn::APlayerTankPawn()
 	Camera->SetupAttachment(SpringArm);
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory Component"));
-	
+	InventoryEquipComponent = CreateDefaultSubobject<UInventoryEquipComponent>(TEXT("Inventory Equip Component"));
 	InventoryManagerComponent = CreateDefaultSubobject<UInventoryManagerComponent>(TEXT("Inventory Manager Component"));
 }
 
@@ -33,7 +34,10 @@ void APlayerTankPawn::BeginPlay()
 	Super::BeginPlay();
 
 	InventoryComponent->Init();
-	InventoryManagerComponent->Init(InventoryComponent);
+	InventoryManagerComponent->SetBaseInventory(InventoryComponent);
+
+	InventoryEquipComponent->Init();
+	InventoryManagerComponent->SetBaseEquipment(InventoryEquipComponent);
 }
 
 void APlayerTankPawn::Tick(float DeltaTime)

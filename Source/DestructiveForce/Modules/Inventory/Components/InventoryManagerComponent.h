@@ -5,6 +5,7 @@
 #include "Engine/DataTable.h"
 #include "InventoryManagerComponent.generated.h"
 
+class UInventoryMainWidget;
 class UInventoryCellWidget;
 struct FInventoryItemInfo;
 class UInventoryWidget;
@@ -16,12 +17,17 @@ class DESTRUCTIVEFORCE_API UInventoryManagerComponent : public UActorComponent
 	GENERATED_BODY()
 
 protected:
+	// Inventory module
 	UPROPERTY()
 	UInventoryComponent* SelfInventoryComponent;
+	
+	UPROPERTY()
+	UInventoryComponent* SelfInventoryEquipComponent;
 
 	UPROPERTY()
-	UInventoryWidget* SelfInventoryWidget;
-
+	UInventoryMainWidget* SelfInventoryWidget;
+	
+	// General
 	UPROPERTY(EditAnywhere)
 	UDataTable* InventoryItemsData;
 
@@ -32,8 +38,10 @@ protected:
 	void OnItemDropEvent(UInventoryCellWidget* From, UInventoryCellWidget* To);
 
 public:
-	void Init(UInventoryComponent* InventoryComponent);
-	void PrepareWidget(UInventoryWidget* Widget);
+	void SetBaseInventory(UInventoryComponent* InventoryComponent);
+	void SetBaseEquipment(UInventoryComponent* InventoryComponent);
+	
+	void PrepareInventoryWidget(UInventoryMainWidget* Widget);
 
 	const FInventoryItemInfo* GetItemData(const FName& Id) const;
 };

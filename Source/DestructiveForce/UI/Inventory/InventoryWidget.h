@@ -5,6 +5,7 @@
 #include "Modules/Inventory/InventoryItem.h"
 #include "InventoryWidget.generated.h"
 
+class UInventoryComponent;
 class UTextBlock;
 class UInventoryCellWidget;
 class UUniformGridPanel;
@@ -30,21 +31,34 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32 RowSize = 5;
 
+	UPROPERTY()
+	UInventoryComponent* RepresentedInventory;
+
 public:
 	FOnItemDrop OnItemDrop;
 
 protected:
+	virtual void NativeConstruct() override;
+
+	void InitCellWidget(UInventoryCellWidget* Widget);
+
 	UInventoryCellWidget* CreateCellWidget();
 
 	void OnItemDropEvent(UInventoryCellWidget* From, UInventoryCellWidget* To);
 
 	UFUNCTION(BlueprintCallable)
 	void SetFilterByType(const TEnumAsByte<EItemType> Type);
-	
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void Init(int32 GridSizeCount);
 
+	UFUNCTION(BlueprintCallable)
+	void SetRepresentedInventory(UInventoryComponent* Component);
+
+	UFUNCTION(BlueprintCallable)
+	UInventoryComponent* GetRepresentedInventory() const;
+	
 	UFUNCTION(BlueprintCallable)
 	bool AddItem(const FInventorySlotInfo& SlotInfo, const FInventoryItemInfo& ItemInfo, int32 SlotPosition);
 

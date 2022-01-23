@@ -6,6 +6,7 @@
 #include "TankPawn.h"
 #include "PlayerTankPawn.generated.h"
 
+class UInventoryEquipComponent;
 class UCameraComponent;
 class USpringArmComponent;
 class UInventoryComponent;
@@ -31,6 +32,9 @@ protected:
 	// #START: Inventory
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UInventoryComponent* InventoryComponent;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UInventoryEquipComponent* InventoryEquipComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UInventoryManagerComponent* InventoryManagerComponent;

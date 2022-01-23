@@ -1,6 +1,7 @@
 ﻿#include "TankPlayerController.h"
 
 #include "Base/PlayerHUD.h"
+#include "Inventory/InventoryMainWidget.h"
 #include "Inventory/InventoryWidget.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Modules/Inventory/Components/InventoryManagerComponent.h"
@@ -118,13 +119,13 @@ void ATankPlayerController::OnInventoryClicked()
 	if (!Hud) return;
 
 	const auto WidgetRaw = Hud->ShowWidget(EWidgetID::Inventory, 10);
-	const auto Widget = Cast<UInventoryWidget>(WidgetRaw);
+	const auto Widget = Cast<UInventoryMainWidget>(WidgetRaw);
 	if (!Widget) return;
 
 	const auto InventoryManager = PossessedPawn->GetInventoryManager();
 	if (!InventoryManager) return;
 
-	InventoryManager->PrepareWidget(Widget);
+	InventoryManager->PrepareInventoryWidget(Widget);
 
 	// Set input mode to UI
 	FInputModeUIOnly Property;

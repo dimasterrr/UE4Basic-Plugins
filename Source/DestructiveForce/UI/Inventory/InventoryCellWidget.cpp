@@ -27,8 +27,18 @@ void UInventoryCellWidget::SetSlotVisible(const bool Value)
 	}
 }
 
+void UInventoryCellWidget::SetParentWidget(UInventoryWidget* InventoryWidget)
+{
+	ParentWidget = InventoryWidget;
+}
+
+UInventoryWidget* UInventoryCellWidget::GetParentWidget() const
+{
+	return ParentWidget;
+}
+
 void UInventoryCellWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent,
-												UDragDropOperation*& OutOperation)
+                                                UDragDropOperation*& OutOperation)
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
@@ -71,6 +81,12 @@ const FInventorySlotInfo& UInventoryCellWidget::GetItem()
 bool UInventoryCellWidget::AddItem(const FInventorySlotInfo& SlotInfo, const FInventoryItemInfo& ItemInfo)
 {
 	if (HasItem) return false;
+
+	if (SlotInfo.Count == 0)
+	{
+		Erase();
+		return true;
+	}
 
 	if (ItemIconImage)
 	{

@@ -3,13 +3,32 @@
 #include "InventoryCellWidget.h"
 #include "Components/UniformGridPanel.h"
 
+void UInventoryWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	for (const auto& Cell : CellWidgets)
+	{
+		InitCellWidget(Cell);
+	}
+}
+
+void UInventoryWidget::InitCellWidget(UInventoryCellWidget* Widget)
+{
+	if (!Widget) return;
+
+	Widget->SetParentWidget(this);
+	Widget->OnItemDrop.AddUObject(this, &UInventoryWidget::OnItemDropEvent);
+}
+
 UInventoryCellWidget* UInventoryWidget::CreateCellWidget()
 {
 	if (!CellWidgetClass) return nullptr;
 
 	const auto CellWidget = CreateWidget<UInventoryCellWidget>(this, CellWidgetClass);
-	CellWidget->OnItemDrop.AddUObject(this, &UInventoryWidget::OnItemDropEvent);
 	CellWidgets.Add(CellWidget);
+
+	InitCellWidget(CellWidget);
 
 	return CellWidget;
 }
@@ -33,6 +52,16 @@ void UInventoryWidget::Init(const int32 GridSizeCount)
 		CellWidget->SetInventorySlotIndex(i);
 		ItemsGridPanel->AddChildToUniformGrid(CellWidget, i / RowSize, i % RowSize);
 	}
+}
+
+void UInventoryWidget::SetRepresentedInventory(UInventoryComponent* Component)
+{
+	RepresentedInventory = Component;
+}
+
+UInventoryComponent* UInventoryWidget::GetRepresentedInventory() const
+{
+	return RepresentedInventory;
 }
 
 bool UInventoryWidget::AddItem(const FInventorySlotInfo& SlotInfo, const FInventoryItemInfo& ItemInfo,
