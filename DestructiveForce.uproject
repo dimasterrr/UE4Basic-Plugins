@@ -17,6 +17,10 @@
 		{
 			"Name": "InventorySystem",
 			"Enabled": true
+		},
+		{
+			"Name": "MediaManager",
+			"Enabled": true
 		}
 	]
 }

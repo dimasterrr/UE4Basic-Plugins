@@ -28,14 +28,16 @@ public class DestructiveForce : ModuleRules
 
 		PrivateIncludePathModuleNames.AddRange(new string[]
 		{
-			"InventorySystem"
+			"InventorySystem",
+			"MediaManager"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
 			"Slate",
 			"SlateCore",
-			"InventorySystem"
+			"InventorySystem",
+			"MediaManager"
 		});
 
 		// Uncomment if you are using online features
