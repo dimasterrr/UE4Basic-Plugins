@@ -7,7 +7,7 @@
 class UInventoryWidget;
 class UInventoryManagerComponent;
 UCLASS()
-class DESTRUCTIVEFORCE_API UInventoryMainWidget : public UUserWidget
+class INVENTORYSYSTEM_API UInventoryMainWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

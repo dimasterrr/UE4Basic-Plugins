@@ -2,11 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Modules/Inventory/InventoryItem.h"
+#include "Base/InventoryItem.h"
 #include "InventoryComponent.generated.h"
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class DESTRUCTIVEFORCE_API UInventoryComponent : public UActorComponent
+class INVENTORYSYSTEM_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

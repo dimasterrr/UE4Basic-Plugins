@@ -1,4 +1,4 @@
-﻿#include "EquipInterface.h"
+﻿#include "Base/EquipInterface.h"
 
 void IEquipInterface::EquipItem(EItemEquipSlot Slot, FName ItemID)
 {

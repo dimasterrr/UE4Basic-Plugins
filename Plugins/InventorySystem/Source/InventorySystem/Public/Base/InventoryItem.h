@@ -4,7 +4,6 @@
 #include "Engine/DataTable.h"
 #include "InventoryItem.generated.h"
 
-
 UENUM()
 enum class EItemType : uint8
 {
@@ -39,7 +38,7 @@ enum class EItemEquipSlot : uint8
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemDrop, class UInventoryCellWidget* /*From*/, class UInventoryCellWidget* /*To*/)
 
 USTRUCT(BlueprintType)
-struct DESTRUCTIVEFORCE_API FInventoryItemInfo : public FTableRowBase
+struct INVENTORYSYSTEM_API FInventoryItemInfo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -72,7 +71,7 @@ struct DESTRUCTIVEFORCE_API FInventoryItemInfo : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
-struct DESTRUCTIVEFORCE_API FInventorySlotInfo : public FTableRowBase
+struct INVENTORYSYSTEM_API FInventorySlotInfo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 

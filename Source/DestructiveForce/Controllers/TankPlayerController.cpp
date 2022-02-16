@@ -1,10 +1,10 @@
 ﻿#include "TankPlayerController.h"
 
 #include "Base/PlayerHUD.h"
-#include "Inventory/InventoryMainWidget.h"
-#include "Inventory/InventoryWidget.h"
+#include "UI/InventoryMainWidget.h"
+#include "UI/InventoryWidget.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Modules/Inventory/Components/InventoryManagerComponent.h"
+#include "Components/InventoryManagerComponent.h"
 
 ATankPlayerController::ATankPlayerController()
 {

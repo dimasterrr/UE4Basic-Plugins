@@ -7,7 +7,7 @@
 class UInventoryCellWidget;
 
 UCLASS()
-class DESTRUCTIVEFORCE_API UInventoryDragDropOperation : public UDragDropOperation
+class INVENTORYSYSTEM_API UInventoryDragDropOperation : public UDragDropOperation
 {
 	GENERATED_BODY()
 	

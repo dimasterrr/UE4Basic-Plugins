@@ -6,9 +6,9 @@
 #include "DestructiveForce/Base/PlayerHUD.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "DestructiveForce/Weapons/WeaponBase.h"
-#include "Modules/Inventory/Components/InventoryComponent.h"
-#include "Modules/Inventory/Components/InventoryEquipComponent.h"
-#include "Modules/Inventory/Components/InventoryManagerComponent.h"
+#include "Components/InventoryComponent.h"
+#include "Components/InventoryEquipComponent.h"
+#include "Components/InventoryManagerComponent.h"
 
 APlayerTankPawn::APlayerTankPawn()
 {

@@ -12,7 +12,7 @@ class UInventoryWidget;
 class UInventoryComponent;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class DESTRUCTIVEFORCE_API UInventoryManagerComponent : public UActorComponent
+class INVENTORYSYSTEM_API UInventoryManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -20,13 +20,13 @@ protected:
 	// Inventory module
 	UPROPERTY()
 	UInventoryComponent* SelfInventoryComponent;
-	
+
 	UPROPERTY()
 	UInventoryComponent* SelfInventoryEquipComponent;
 
 	UPROPERTY()
 	UInventoryMainWidget* SelfInventoryWidget;
-	
+
 	// General
 	UPROPERTY(EditAnywhere)
 	UDataTable* InventoryItemsData;
@@ -40,7 +40,7 @@ protected:
 public:
 	void SetBaseInventory(UInventoryComponent* InventoryComponent);
 	void SetBaseEquipment(UInventoryComponent* InventoryComponent);
-	
+
 	void PrepareInventoryWidget(UInventoryMainWidget* Widget);
 
 	const FInventoryItemInfo* GetItemData(const FName& Id) const;

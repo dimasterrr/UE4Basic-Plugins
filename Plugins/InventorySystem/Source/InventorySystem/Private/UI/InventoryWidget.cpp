@@ -1,6 +1,5 @@
-﻿#include "InventoryWidget.h"
-
-#include "InventoryCellWidget.h"
+﻿#include "UI/InventoryWidget.h"
+#include "UI/InventoryCellWidget.h"
 #include "Components/UniformGridPanel.h"
 
 void UInventoryWidget::NativeConstruct()

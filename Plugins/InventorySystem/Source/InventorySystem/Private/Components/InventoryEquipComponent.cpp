@@ -1,6 +1,5 @@
-﻿#include "InventoryEquipComponent.h"
-
-#include "EquipInterface.h"
+﻿#include "Components/InventoryEquipComponent.h"
+#include "Base/EquipInterface.h"
 
 UInventoryEquipComponent::UInventoryEquipComponent()
 {

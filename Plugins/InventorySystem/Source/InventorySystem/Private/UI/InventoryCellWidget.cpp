@@ -1,5 +1,5 @@
-﻿#include "InventoryCellWidget.h"
-#include "InventoryDragDropOperation.h"
+﻿#include "UI/InventoryCellWidget.h"
+#include "UI/InventoryDragDropOperation.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"

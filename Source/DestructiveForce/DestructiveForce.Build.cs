@@ -26,10 +26,16 @@ public class DestructiveForce : ModuleRules
 			"UMG"
 		});
 
+		PrivateIncludePathModuleNames.AddRange(new string[]
+		{
+			"InventorySystem"
+		});
+
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
 			"Slate",
-			"SlateCore"
+			"SlateCore",
+			"InventorySystem"
 		});
 
 		// Uncomment if you are using online features

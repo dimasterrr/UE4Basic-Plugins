@@ -3,14 +3,14 @@
 #include "CoreMinimal.h"
 #include "InventoryWidget.h"
 #include "Blueprint/UserWidget.h"
-#include "Modules/Inventory/InventoryItem.h"
+#include "Base/InventoryItem.h"
 #include "InventoryCellWidget.generated.h"
 
 class UTextBlock;
 class UImage;
 
 UCLASS()
-class DESTRUCTIVEFORCE_API UInventoryCellWidget : public UUserWidget
+class INVENTORYSYSTEM_API UInventoryCellWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Health/Interfaces/DamageTaker.h"
-#include "Modules/Inventory/Components/EquipInterface.h"
+#include "Base/EquipInterface.h"
 #include "Score/Interface/Scorable.h"
 #include "PawnBase.generated.h"
 

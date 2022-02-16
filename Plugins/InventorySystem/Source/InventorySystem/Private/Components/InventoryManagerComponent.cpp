@@ -1,10 +1,9 @@
-﻿#include "InventoryManagerComponent.h"
-
-#include "InventoryComponent.h"
-#include "Inventory/InventoryWidget.h"
+﻿#include "Components/InventoryManagerComponent.h"
+#include "Components/InventoryComponent.h"
+#include "UI/InventoryWidget.h"
+#include "UI/InventoryCellWidget.h"
+#include "UI/InventoryMainWidget.h"
 #include "Blueprint/UserWidget.h"
-#include "Inventory/InventoryCellWidget.h"
-#include "Inventory/InventoryMainWidget.h"
 
 void UInventoryManagerComponent::SetBaseInventory(UInventoryComponent* InventoryComponent)
 {

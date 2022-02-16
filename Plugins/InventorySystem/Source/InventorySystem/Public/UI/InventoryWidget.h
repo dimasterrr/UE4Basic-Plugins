@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Modules/Inventory/InventoryItem.h"
+#include "Base/InventoryItem.h"
 #include "InventoryWidget.generated.h"
 
 class UInventoryComponent;
@@ -11,7 +11,7 @@ class UInventoryCellWidget;
 class UUniformGridPanel;
 
 UCLASS()
-class DESTRUCTIVEFORCE_API UInventoryWidget : public UUserWidget
+class INVENTORYSYSTEM_API UInventoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

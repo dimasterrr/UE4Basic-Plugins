@@ -1,4 +1,4 @@
-﻿#include "InventoryMainWidget.h"
+﻿#include "UI/InventoryMainWidget.h"
 
 UInventoryWidget* UInventoryMainWidget::GetInventoryWidget() const
 {

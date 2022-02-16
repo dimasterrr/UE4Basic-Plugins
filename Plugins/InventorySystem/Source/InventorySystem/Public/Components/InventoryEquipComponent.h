@@ -4,8 +4,12 @@
 #include "InventoryComponent.h"
 #include "InventoryEquipComponent.generated.h"
 
+struct FInventorySlotInfo;
+struct FInventoryItemInfo;
+enum class EItemEquipSlot : uint8;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class DESTRUCTIVEFORCE_API UInventoryEquipComponent : public UInventoryComponent
+class INVENTORYSYSTEM_API UInventoryEquipComponent : public UInventoryComponent
 {
 	GENERATED_BODY()
 
